@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HALO</title>
+</head>
+
+<body>
+    <button id="button" style=".center {
+        text-align: center;
+        border: 3px solid green;
+      }">
+        BUTTON
+    </button>
+
+    <script>document.getElementById('button').addEventListener('click', () => {
+            // Make a POST request to the specified URL
+            fetch('/category', {
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json', // Adjust content type if needed
+                },
+                // Add any request payload if required
+                // body: JSON.stringify({ key: 'value' }),
+            })
+                .then(response => {
+                    // Handle the response
+                    if (response.ok) {
+                        return response.json(); // Assuming the response is JSON
+                    } else {
+                        throw new Error('Failed to authenticate with Google');
+                    }
+                })
+                .then(data => {
+                    // Handle the data returned from the server
+                    console.log(data);
+                    // You may want to redirect or perform other actions based on the response
+                })
+                .catch(error => {
+                    // Handle errors during the fetch or authentication process
+                    console.error(error);
+                });
+        });
+    </script>
+</body>
+
+</html>

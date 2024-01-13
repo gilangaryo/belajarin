@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Display</title>
+</head>
+
+<body>
+
+    <h1>JSON Data</h1>
+
+    <pre id="jsonDisplay"></pre>
+
+    <script>
+        // Sample JSON data
+        async function fetchCategories() {
+            try {
+                const response = await fetch('https://459d-2001-448a-404a-335c-5c6-51cf-12d0-71f4.ngrok-free.app/category');
+
+                // Check if the response is successful (status code 200) and the content type is JSON
+                if (response.ok && response.headers.get('content-type').includes('application/json')) {
+                    const data = await response.json();
+                    console.log('Response:', response);
+                    return data;
+                } else {
+                    console.error('Error fetching categories:', response.status, response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        }
+
+        const jsonData = [
+            {
+                "category_id": "business",
+                "category_title": "Business",
+                "subCategory": [
+                    // ... (your existing sub-category structure)
+                ]
+            },
+            {
+                "category_id": "coba",
+                "category_title": "haii",
+                "subCategory": [
+                    // ... (your existing sub-category structure)
+                ]
+            },
+            // ... (other categories)
+        ];
+
+        // Function to display JSON data
+        function displayJson() {
+            fetchCategories
+            const jsonDisplay = document.getElementById('jsonDisplay');
+            jsonDisplay.textContent = JSON.stringify(jsonData, null, 2);
+        }
+
+        // Call the function to display JSON
+        displayJson();
+    </script>
+
+</body>
+
+</html>

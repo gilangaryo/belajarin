@@ -1,0 +1,40 @@
+{
+    "133335137": [
+        {
+            "interaction_description": "As VP of Engineering at DrYnks, a dynamic startup, I led the creation of their web app from the ground up, shaping our digital presence and driving innovation in the beverage industry.",
+            "started_at": 1630454400000,
+            "ended_at": null,
+            "enriched_details": {
+                "name": "Drynks",
+                "description": "Drynks is an online dating site that is all about the date – from the thrill of showing chivalry to a beautiful woman to the joy of feeling appreciated and admired. ",
+                "industry": "Dating Services",
+                "logo": "https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto,t_clients_thumb/v1/attachments/company/logo/361ca501f20db695c3c1e8afc3d39f4e-1650951296/61d4aac6ca08bb6a627b7df5.png",
+                "in_fortune": false
+            }
+        },
+        {
+            "interaction_description": "As a Software Engineer at CareCloud, I adeptly enhanced internal applications with cutting-edge tech. My tasks included thorough info analysis, user collaboration, and meticulous system and data scrutiny.",
+            "started_at": 1533081600000,
+            "ended_at": 1580515200000,
+            "enriched_details": {
+                "name": "CareCloud",
+                "description": "CareCloud, Inc. is a publicly traded American healthcare information technology company that provides a full suite of proprietary cloud-based solutions, together with related business services, to healthcare providers and hospitals throughout the United States.",
+                "industry": "Information Technology (IT)",
+                "logo": "https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto,t_clients_thumb/v1/attachments/company/logo/795e339236ef8ce90f10055504173f33-1650962100/61d830bfbcc82a0713b4f241.png",
+                "in_fortune": false
+            }
+        },
+        {
+            "interaction_description": "As a freelance developer at Eatster, I contributed to their web app by designing diverse features, such as crafting menu screens for various restaurants, and enhancing user experiences in the culinary world.",
+            "started_at": 1672531200000,
+            "ended_at": null,
+            "enriched_details": {
+                "name": "Eatster",
+                "description": "Eatster is a brand new way to order food for people on the go. Choose in advance, book a seat or pick up your food on the spot and save time. In addition, you can save food that restaurants would otherwise had to throw away!",
+                "industry": "Restaurants",
+                "logo": "https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto,t_clients_thumb/v1/attachments/company/logo/343f894b3922135c59ce5f495a08bed2-1668522892/6363bfd383a819543c249e8e.png",
+                "in_fortune": false
+            }
+        }
+    ]
+}

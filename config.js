@@ -1,21 +1,31 @@
 const firebase = require("firebase");
 require('firebase/storage');
+const fire = require('firebase-admin');
+const { initializeApp, getApp } = require("@firebase/app");
+const { getAuth } = require("@firebase/auth");
+const { Firestore, CollectionReference } = require("firebase/firestore");
+require('dotenv').config();
+const { getDatabase } = ("firebase/database");
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAx_TjUwKVveiyLjlmKuQHayjLMNhyYaMw",
-  authDomain: "belajarin-ac6fd.firebaseapp.com",
-  projectId: "belajarin-ac6fd",
-  storageBucket: "gs://belajarin-ac6fd.appspot.com",
-  messagingSenderId: "256761147201",
-  appId: "1:256761147201:web:f360f4bb7b1d82ad0fbbc0",
-  measurementId: "G-367E7RGK43"
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID,
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
+// const auth = getAuth(app);
 const db = firebase.firestore();
-// const auth = firebase.auth();
-const storage = firebase.storage();
+// const auth = firebase.auth(app);
+// const db = new Firestore();
+
+// const auth = app.auth();
 
 
 module.exports = db;
 
-
+// exports.auth = auth;

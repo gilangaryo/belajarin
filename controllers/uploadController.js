@@ -1,31 +1,50 @@
-import firebase from "firebase/app";
-import "firebase/compat/storage";
+const { getStorage, ref, uploadBytesResumable, uploadBytes } = require('@firebase/storage');
+const { signInWithEmailAndPassword } = require("@firebase/auth");
+const { initializeApp } = require("@firebase/app");
+const { getDownloadURL } = require("@firebase/storage");
 
-// TODO: Replace the following with your app's Firebase project configuration
-// See: https://firebase.google.com/docs/web/learn-more#config-object
-const firebaseConfig = {
-    apiKey: "AIzaSyAx_TjUwKVveiyLjlmKuQHayjLMNhyYaMw",
-    authDomain: "belajarin-ac6fd.firebaseapp.com",
-    projectId: "belajarin-ac6fd",
-    storageBucket: "gs://belajarin-ac6fd.appspot.com",
-    messagingSenderId: "256761147201",
-    appId: "1:256761147201:web:f360f4bb7b1d82ad0fbbc0",
-    measurementId: "G-367E7RGK43"
+require('dotenv').config();
+
+
+const uploadss = async (req, res) => {
+    try {
+        const { auth } = require("../configUpload");
+
+        // await signInWithEmailAndPassword(auth, process.env.FIREBASE_USER, process.env.FIREBASE_AUTH);
+        const storageGet = getStorage(auth);
+
+        const fileku = req.file;
+
+        const filename = `imagess/${fileku.originalname}`;
+
+        const dateTime = giveCurrentDateTime();
+        const metadata = {
+            contentType: fileku.mimetype
+        };
+
+        const storageRef = ref(storageGet, filename + dateTime);
+
+        await uploadBytes(storageRef, fileku.buffer, metadata);
+
+        console.log('file successfully uploaded');
+        res.send({
+            message: 'file uploaded to firebase storage',
+            name: req.file.originalname,
+            type: req.file.mimetype,
+        });
+    } catch (error) {
+        return res.status(400).send(error.message);
+    }
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const giveCurrentDateTime = () => {
+    const today = new Date();
+    const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const dateTime = date + ' ' + time;
+    return dateTime;
+};
 
-
-// Create a root reference
-var storageRef = firebase.storage().ref();
-
-// Create a reference to 'mountains.jpg'
-var mountainsRef = storageRef.child('mountains.jpg');
-
-// Create a reference to 'images/mountains.jpg'
-var mountainImagesRef = storageRef.child('images/mountains.jpg');
-
-// While the file names are the same, the references point to different files
-mountainsRef.name === mountainImagesRef.name;           // true
-mountainsRef.fullPath === mountainImagesRef.fullPath;   // false 
+module.exports = {
+    uploadss
+};

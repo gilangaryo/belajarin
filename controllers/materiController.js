@@ -36,11 +36,11 @@ const addMateri = async (req, res) => {
 
 
 
-const getMateri = async (req, res) => {
+const getMateriMentor = async (req, res) => {
 
     try {
-        const { category, categoryName } = req.params;
-        const { title, judul } = req.body;
+        const { uid } = req.params;
+        const { category, subCategory, subuMenu } = req.body;
 
         // ambil kategori
         const categoryRef = db.collection('categories').doc(category);
@@ -87,6 +87,6 @@ const getMateri = async (req, res) => {
 
 module.exports = {
     addMateri,
-    getMateri
+    getMateriMentor
 
 };

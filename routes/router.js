@@ -17,7 +17,7 @@ const { signUp, login, logout } = require('../controllers/authController');
 const { pay, trxNotif } = require('../controllers/paymentController');
 const { getAllcategory, getCategory, addSubcategory, getMateri } = require('../controllers/categoryController');
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
-const { addMateri } = require('../controllers/materiController');
+const { addMateri, getMateriMentor } = require('../controllers/materiController');
 const { getBank } = require('../controllers/bank');
 const { uploadss } = require('../controllers/uploadController');
 const { uploadImageku } = require('../controllers/uploadImage');
@@ -53,11 +53,13 @@ router.post('/addMentor', addMentor);
 router.post('/pay', pay);
 router.post('/notification', trxNotif);
 
-
+router.get('/material/:name/:uid', getMateriMentor);
 // category
 router.get('/category', getAllcategory);
 router.get('/:category', getCategory);
 router.get('/:category/:subMenu', getMateri);
+
+
 
 
 // router.get('/category/:category/:subCategory/:subMenu', getSubCategory);

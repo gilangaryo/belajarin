@@ -6,7 +6,7 @@ const db = require("../config");
 const addMateri = async (req, res) => {
     try {
         // const { category, subCategory, subMenu } = req.params;
-        const { title, category, subCategory, subMenu } = req.body;
+        const { title, category, subCategory, subMenu, price, rating, description, mentor_id, mentor_name } = req.body;
 
         const categoryRef = db.collection('categories').doc(category);
         const subCollectionRef = categoryRef.collection("subCategory").doc(subCategory);
@@ -15,11 +15,12 @@ const addMateri = async (req, res) => {
 
         if (title) {
 
-            const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/fotoJs.png?alt=media&token=6735d303-36e3-4cb4-9dff-33d2e642f11c";
+            const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/imagess%2Fpythonnn.png?alt=media&token=b7910944-9334-4a39-aeab-20fe011f289a";
 
             await subCollectionRef3.set({
                 materi_id: subCollectionRef3.id,
                 title: title,
+                description: description,
                 image: img
             });
 
@@ -37,52 +38,73 @@ const addMateri = async (req, res) => {
 
 
 const getMateriMentor = async (req, res) => {
+    const { uid } = req.params;
+
+    try {
+        // Perform a collection group query to find the document with the matching uid
+        const querySnapshot = await db.collectionGroup('materi').where('uid', '==', uid).get();
+
+        if (!querySnapshot.empty) {
+            // If documents are found, return the data
+            const materiData = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            res.json(materiData);
+        } else {
+            // If no documents are found, return a 404 status
+            res.status(404).json({ error: 'Materi not found' });
+        }
+    } catch (error) {
+        // Handle errors
+        console.error('Error fetching materi:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+};
+
+
+
+const getMateriMentor2 = async (req, res) => {
 
     try {
         const { uid } = req.params;
-        const { category, subCategory, subuMenu } = req.body;
+        // const { uid, nama, email, profilePic } = req.body;
+        const { category, subCategory, subMenu } = req.body;
+        // const category = req.body.category;
+        console.log(category);
 
+        // console.log(subCategory);
+        // console.log(subMenu);
         // ambil kategori
         const categoryRef = db.collection('categories').doc(category);
 
-        // ambil subkategori
-        const subCategoryRef = categoryRef.collection("subCategory").doc(categoryName);
 
-        // ambil submenu
-        const subMenuRef = subCategoryRef.collection("subMenu").doc("");
+        // // ambil subkategori
+        const subCategoryRef = categoryRef.collection("subCategory").doc(subCategory);
 
-        // ambil materi
-        const materiRef = subMenuRef.collection("materi").doc();
+        // // ambil submenu
+        const subMenuRef = subCategoryRef.collection("subMenu").doc(subMenu);
+
+        // // ambil materi
+        const materiRef = subMenuRef.collection("materi").doc(uid);
 
         const snapshot = await materiRef.get();
-        const allCategories = [];
 
         if (snapshot) {
-
-            const submenu = subMenuSnapshot.docs.map((doc) => ({
+            const submenu = snapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data()
             }));
             res.send(submenu);
-
-            // const subCategoryWithMenu = {
-            //     sub_title: subCatItem.title,
-            // };
         }
-
 
     } catch (error) {
         // Handle errors, e.g., by sending an error response
         res.status(500).send("Internal Server Error");
     }
 };
-
-
-
-
-
-
-
 
 
 module.exports = {

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category and Subcategories</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .category {
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .subcategory {
+            margin-bottom: 10px;
+        }
+
+        .sub-menu {
+            margin-left: 20px;
+        }
+
+        .sub-menu-item {
+            margin-bottom: 5px;
+        }
+
+        .sub-menu-item img {
+            max-width: 50px;
+            max-height: 50px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="category-container"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const data = {
+                "category": "programming",
+                "subcategories": [
+                    {
+                        "id": "ai-development",
+                        "image": "http",
+                        "title": "AI Development",
+                        "subMenu": [
+                            {
+                                "uid": "ai-agents",
+                                "image": "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/fotoJs.png?alt=media&token=6735d303-36e3-4cb4-9dff-33d2e642f11c",
+                                "title": "AI Agents"
+                            },
+                            {
+                                "uid": "ai-chatbot",
+                                "image": "http",
+                                "title": "AI Chatbot"
+                            },
+                            {
+                                "uid": "ai-integrations",
+                                "image": "http",
+                                "title": "AI Integrations"
+                            },
+                            {
+                                "uid": "ai-websites",
+                                "title": "AI Websites",
+                                "image": "http"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "game-development",
+                        "image": "http",
+                        "title": "Game Development",
+                        "subMenu": [
+                            {
+                                "uid": "console-games",
+                                "image": "http",
+                                "title": "Console Games"
+                            },
+                            {
+                                "uid": "mobile-games",
+                                "image": "http",
+                                "title": "Mobile Games"
+                            },
+                            {
+                                "uid": "pc-games",
+                                "title": "PC Games",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "vr-games",
+                                "image": "http",
+                                "title": "VR Games"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "microsoft-office",
+                        "title": "Microsoft Office",
+                        "image": "http",
+                        "subMenu": [
+                            {
+                                "uid": "excel",
+                                "title": "Excel",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "power-point",
+                                "image": "http",
+                                "title": "Power Point"
+                            },
+                            {
+                                "uid": "project",
+                                "image": "http",
+                                "title": "Project"
+                            },
+                            {
+                                "uid": "word",
+                                "image": "http",
+                                "title": "Word"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "mobile-app-development",
+                        "image": "http",
+                        "title": "Mobile App Development",
+                        "subMenu": [
+                            {
+                                "uid": "android-app-development",
+                                "id": "android-app-development",
+                                "image": "http",
+                                "title": "Android App Development"
+                            },
+                            {
+                                "uid": "cross-platform-development",
+                                "image": "http",
+                                "title": "Cross-platform Development"
+                            },
+                            {
+                                "uid": "ios-app-development",
+                                "title": "IOS App Development",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "mobile-app-maintenance",
+                                "title": "Mobile App Maintenance",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "website-to-app",
+                                "title": "Website to App",
+                                "image": "http"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "qa-review",
+                        "image": "http",
+                        "title": "QA & Review",
+                        "subMenu": [
+                            {
+                                "uid": "code-review",
+                                "title": "Code Review",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "design-review",
+                                "title": "Design Review",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "software-testing",
+                                "image": "http",
+                                "title": "Sofrware Testing"
+                            },
+                            {
+                                "uid": "user-testing",
+                                "image": "http",
+                                "title": "User Testing"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "software-developers",
+                        "title": "Software Developers",
+                        "image": "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/fotoJs.png?alt=media&token=6735d303-36e3-4cb4-9dff-33d2e642f11c",
+                        "subMenu": [
+                            {
+                                "uid": "html-css-developers",
+                                "image": "http",
+                                "title": "HTML & CSS Developers"
+                            },
+                            {
+                                "uid": "java-developers",
+                                "image": "http",
+                                "title": "Java Developers"
+                            },
+                            {
+                                "uid": "javascript-developers",
+                                "title": "Javascript Developers",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "php-developers",
+                                "title": "PHP Developers",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "python-developers",
+                                "title": "Python Developers",
+                                "image": "http"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "software-development",
+                        "image": "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/fotoJs.png?alt=media&token=6735d303-36e3-4cb4-9dff-33d2e642f11c",
+                        "title": "Software Development",
+                        "subMenu": [
+                            {
+                                "uid": "api-integrations",
+                                "image": "http",
+                                "title": "API & Integrations"
+                            },
+                            {
+                                "uid": "browser-extensions",
+                                "image": "http",
+                                "title": "Browser Extensions"
+                            },
+                            {
+                                "uid": "desktop-applications",
+                                "image": "http",
+                                "title": "Desktop Applications"
+                            },
+                            {
+                                "uid": "javascript",
+                                "title": "Javascript"
+                            },
+                            {
+                                "uid": "web-applications",
+                                "title": "Web Applications",
+                                "image": "http"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "support-cybersecurity",
+                        "image": "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/fotoJs.png?alt=media&token=6735d303-36e3-4cb4-9dff-33d2e642f11c",
+                        "title": "Support & Cybersecurity",
+                        "subMenu": [
+                            {
+                                "uid": "convert-files",
+                                "title": "Convert Files",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "cybersecurity",
+                                "image": "http",
+                                "title": "Cybersecurity"
+                            },
+                            {
+                                "uid": "devops-cloud",
+                                "title": "DevOps & Cloud",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "support-it",
+                                "image": "http",
+                                "title": "Support & IT"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "website-development",
+                        "title": "Website Development",
+                        "image": "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/fotoJs.png?alt=media&token=6735d303-36e3-4cb4-9dff-33d2e642f11c",
+                        "subMenu": [
+                            {
+                                "uid": "build-a-complete-website-with-website-platforms",
+                                "image": "http",
+                                "title": "Build a Complete Website with Website Platforms"
+                            },
+                            {
+                                "uid": "business-websites",
+                                "image": "http",
+                                "title": "Business Websites"
+                            },
+                            {
+                                "uid": "dropshipping websites",
+                                "title": "Dropshipping Websites",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "e-commerce-development",
+                                "title": "E-Commerce Development",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "landing-pages",
+                                "title": "Landing Pages"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "website-maintenance",
+                        "title": "Website Maintenance",
+                        "image": "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/fotoJs.png?alt=media&token=6735d303-36e3-4cb4-9dff-33d2e642f11c",
+                        "subMenu": [
+                            {
+                                "uid": "backup-migrations",
+                                "image": "http",
+                                "title": "Backup & Migrations"
+                            },
+                            {
+                                "uid": "bug-fixes",
+                                "title": "Bug Fixes",
+                                "image": "http"
+                            },
+                            {
+                                "uid": "speed-optimization",
+                                "image": "http",
+                                "title": "Speed Optimization"
+                            }
+                        ]
+                    }
+                ]
+            };
+            const categoryContainer = document.getElementById("category-container");
+
+            // Display category
+            const categoryHeader = document.createElement("h2");
+            categoryHeader.textContent = data.category;
+            categoryContainer.appendChild(categoryHeader);
+
+            // Display subcategories
+            data.subcategories.forEach(subcategory => {
+                const subcategoryDiv = document.createElement("div");
+                subcategoryDiv.classList.add("subcategory");
+
+                const subcategoryTitle = document.createElement("h3");
+                subcategoryTitle.textContent = subcategory.title;
+
+                const subcategoryImage = document.createElement("img");
+                subcategoryImage.src = subcategory.image;
+                subcategoryImage.alt = subcategory.title;
+
+                const subMenuContainer = document.createElement("div");
+                subMenuContainer.classList.add("sub-menu");
+
+                // Display subMenu
+                subcategory.subMenu.forEach(subMenu => {
+                    const subMenuItem = document.createElement("div");
+                    subMenuItem.classList.add("sub-menu-item");
+
+                    const subMenuImage = document.createElement("img");
+                    subMenuImage.src = subMenu.image;
+                    subMenuImage.alt = subMenu.title;
+
+                    const subMenuTitle = document.createElement("span");
+                    subMenuTitle.textContent = subMenu.title;
+
+                    // Create anchor element
+                    const subMenuLink = document.createElement("a");
+                    subMenuLink.href = `https://google.com/${subMenu.uid}`;
+                    subMenuLink.target = "_blank"; // Open link in a new tab
+
+                    // Add click event to subMenu item
+                    subMenuLink.addEventListener("click", (event) => {
+                        event.preventDefault(); // Prevent default behavior (e.g., navigating to the link)
+                        handleSubMenuClick(subMenu.uid);
+                    });
+
+                    subMenuLink.appendChild(subMenuImage);
+                    subMenuLink.appendChild(subMenuTitle);
+                    subMenuItem.appendChild(subMenuLink);
+
+                    subMenuContainer.appendChild(subMenuItem);
+                });
+
+                subcategoryDiv.appendChild(subcategoryTitle);
+                subcategoryDiv.appendChild(subcategoryImage);
+                subcategoryDiv.appendChild(subMenuContainer);
+
+                categoryContainer.appendChild(subcategoryDiv);
+            });
+
+            // Function to handle subMenu click
+            function handleSubMenuClick(uid) {
+                // Perform your desired action with the uid, for example:
+                console.log("Clicked on uid:", uid);
+                // You can navigate to a new page with the uid as a parameter or any other action.
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -7,7 +7,6 @@ const path = require('path');
 const multer = require('multer');
 // const uuid = require("uuid-v4");
 
-// tes
 const apps = express();
 const serverless = require('serverless-http');
 
@@ -35,7 +34,7 @@ router.use((req, res, next) => {
 // ... rest of your server setup
 
 
-router.get('/', getAllMember);
+router.get('/member', getAllMember);
 
 router.get('/member/:id', getMember);
 // router.post('/member/:id', updateMember);
@@ -79,21 +78,9 @@ router.post('/sendemails', sendEmails);
 
 router.post('/addMateri', addMateri);
 
-router.get('/paaa', (req, res) => {
+router.get('/', (req, res) => {
     res.json({
-        "materi": [
-            {
-                "image": "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/fotoJs.png?alt=media&token=6735d303-36e3-4cb4-9dff-33d2e642f11c",
-                "title": "mencobaa",
-                "materi_id": "7IkqJpeMkpz8Bbp3nN9X"
-            },
-            {
-                "mentor_id": "gilang",
-                "image": "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/fotoJs.png?alt=media&token=6735d303-36e3-4cb4-9dff-33d2e642f11c",
-                "title": "tes materi javascripttt",
-                "materi_id": "ykmkhPXx2YoDzaS3lMwU"
-            }
-        ]
+        'haii': 'terbaru'
     });
 });
 

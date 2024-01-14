@@ -35,7 +35,7 @@ router.use((req, res, next) => {
 // ... rest of your server setup
 
 
-router.get('/member', getAllMember);
+router.get('/', getAllMember);
 
 router.get('/member/:id', getMember);
 // router.post('/member/:id', updateMember);
@@ -79,7 +79,7 @@ router.post('/sendemails', sendEmails);
 
 router.post('/addMateri', addMateri);
 
-router.get('/', (req, res) => {
+router.get('/paaa', (req, res) => {
     res.json({
         "materi": [
             {

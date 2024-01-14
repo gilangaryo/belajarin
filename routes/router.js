@@ -15,7 +15,7 @@ const { getAllMember, getMember, deleteMember, addMember } = require("../control
 const { getAllMentor, addMentor } = require("../controllers/mentorController");
 const { signUp, login, logout } = require('../controllers/authController');
 const { pay, trxNotif } = require('../controllers/paymentController');
-const { getAllcategory, getCategory, getSubCategory, getSubMenu, addSubcategory, getMateri } = require('../controllers/categoryController');
+const { getAllcategory, getCategory, addSubcategory, getMateri } = require('../controllers/categoryController');
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
 const { addMateri } = require('../controllers/materiController');
 const { getBank } = require('../controllers/bank');
@@ -56,11 +56,11 @@ router.post('/notification', trxNotif);
 
 // category
 router.get('/category', getAllcategory);
-
-router.get('/getBank', getBank);
-
 router.get('/:category', getCategory);
-router.get('/:category/:subCategory', getSubMenu);
+
+
+
+
 router.get('/:category/:subCategory/:subMenu', getMateri);
 
 

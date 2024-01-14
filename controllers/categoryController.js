@@ -62,33 +62,37 @@ const getAllcategory = async (req, res) => {
 
 
 
+// fixxxxxxx
 const getCategory = async (req, res) => {
     try {
-        const { category, subCategory } = req.params;
+        const { category } = req.params;
 
-        // Retrieve the category document
         const categoryDoc = await db.collection("categories").doc(category).get();
 
         if (!categoryDoc.exists) {
             return res.status(404).json({ error: 'Category not found' });
         }
-        // const kategori = categoryDoc.docs.map(kategoriDoc => ({
-        //     id: kategoriDoc.id,
-        //     title: subCategoryDoc.title,
-        //     ...subCategoryDoc.data()
-        // }));
 
-
-        // Retrieve all subcategories of the category
         const subcategoriesSnapshot = await categoryDoc.ref.collection("subCategory").get();
-        const subcategories = subcategoriesSnapshot.docs.map(subCategoryDoc => ({
-            id: subCategoryDoc.id,
-            title: subCategoryDoc.title,
-            header: subCategoryDoc.data().title,
-            ...subCategoryDoc.data()
-        }));
+        const subcategories = [];
 
-        // res.json({ category, subcategories });
+        for (const subCategoryDoc of subcategoriesSnapshot.docs) {
+            const subCategoryData = subCategoryDoc.data();
+
+            const subMenuSnapshot = await subCategoryDoc.ref.collection("subMenu").get();
+            const subMenu = subMenuSnapshot.docs.map(subMenuDoc => subMenuDoc.data());
+
+            const subcategoryWithSubMenu = {
+                id: subCategoryDoc.id,
+                // title: subCategoryData.title,
+                // header: subCategoryData.title,
+                ...subCategoryData,
+                subMenu: subMenu
+            };
+
+            subcategories.push(subcategoryWithSubMenu);
+        }
+
         res.send({ category, subcategories });
     } catch (error) {
         console.error("Error fetching category:", error);
@@ -98,96 +102,6 @@ const getCategory = async (req, res) => {
 
 
 
-
-const getSubCategory = async (req, res) => {
-    try {
-        const categories = db.collection("categories");
-        const categoryRef = req.params.category;
-        const snapshot = await categories.doc(categoryRef).get();
-
-        if (!snapshot.exists) {
-            return res.status(404).json({ error: 'subcategory not found' });
-
-        }
-        // ambil all sub kategori
-        const sub = snapshot.ref.collection("subCategory");
-        const subCategory = await sub.get();
-        const list = subCategory.docs.map((doc) => ({
-            id: doc.id,
-            header: doc.title,
-            ...doc.data()
-        }));
-        // end
-
-        // ambil sub menu = anaknya
-        const snapshot2 = await sub.doc(subCategoryRef).get();
-
-        const subMenu = snapshot2.ref.collection("subMenu");
-        const allSub = await subMenu.get();
-        const list2 = allSub.docs.map((doc) => ({
-
-            subCategory: list,
-            SubMenuu: {
-                header: doc.title,
-                id: doc.id,
-                ...doc.data()
-            }
-        }));
-
-
-        res.send(list2);
-    } catch (error) {
-        console.error("Error fetching category:", error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
-
-const getSubMenu = async (req, res) => {
-    try {
-        const categoryRef = req.params.category;
-        const subCategoryRef = req.params.subCategory;
-
-        // ambil kategori programming
-        const categories = db.collection("categories");
-        const snapshot = await categories.doc(categoryRef).get();
-
-        // ceking
-        if (!snapshot.exists) {
-            return res.status(404).json({ error: 'category not found' });
-        }
-
-        // ambil all sub kategori
-        const sub = snapshot.ref.collection("subCategory");
-        const subCategory = await sub.get();
-        const list = subCategory.docs.map((doc) => ({
-            id: doc.id,
-            header: doc.title,
-            ...doc.data()
-        }));
-        // end
-
-        // ambil sub menu = anaknya
-        const snapshot2 = await sub.doc(subCategoryRef).get();
-
-        const subMenu = snapshot2.ref.collection("subMenu");
-        const allSub = await subMenu.get();
-        const list2 = allSub.docs.map((doc) => ({
-
-            // subCategory: list,
-            SubMenuu: {
-                header: doc.title,
-                id: doc.id,
-                ...doc.data()
-            }
-        }));
-
-
-        res.send(list2);
-    } catch (error) {
-        console.error("Error fetching category:", error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
 const getMateri = async (req, res) => {
     try {
         const { category, subCategory, subMenu } = req.params;
@@ -319,8 +233,7 @@ const deletecategory = async (req, res) => {
 module.exports = {
     getAllcategory,
     getCategory,
-    getSubCategory,
-    getSubMenu,
+
     updatecategory,
     deletecategory,
     addSubcategory,

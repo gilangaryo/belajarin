@@ -36,8 +36,8 @@ const addTransaction = async (req, res, transaction_id, price) => {
 const pay = async (req, res) => {
     try {
 
-        const { name } = req.body;
-        const transaction_id = "aklsdja";
+        const { name, uid } = req.body;
+        const transaction_id = uid;
         const price = 50000;
         // addTransaction(transaction_id, price, name);
 

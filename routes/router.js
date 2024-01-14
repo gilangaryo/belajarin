@@ -57,10 +57,6 @@ router.post('/notification', trxNotif);
 // category
 router.get('/category', getAllcategory);
 router.get('/:category', getCategory);
-
-
-
-
 router.get('/:category/:subCategory/:subMenu', getMateri);
 
 

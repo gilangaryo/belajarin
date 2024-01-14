@@ -80,14 +80,14 @@ const getCategory = async (req, res) => {
             const subCategoryData = subCategoryDoc.data();
 
             const subMenuSnapshot = await subCategoryDoc.ref.collection("subMenu").get();
-            const subMenu = subMenuSnapshot.docs.map(subMenuDoc => subMenuDoc.data());
+            const subMenu = subMenuSnapshot.docs.map(subMenuDoc => ({ uid: subMenuDoc.id, ...subMenuDoc.data() }));
 
             const subcategoryWithSubMenu = {
                 id: subCategoryDoc.id,
                 // title: subCategoryData.title,
                 // header: subCategoryData.title,
                 ...subCategoryData,
-                subMenu: subMenu
+                subMenu: subMenu,
             };
 
             subcategories.push(subcategoryWithSubMenu);
@@ -104,8 +104,8 @@ const getCategory = async (req, res) => {
 
 const getMateri = async (req, res) => {
     try {
-        const { category, subCategory, subMenu } = req.params;
-
+        const { category, subMenu } = req.params;
+        const subCategory = "mobile-app-development";
         // Get the category document
         const categoryDoc = await db.collection("categories").doc(category).get();
 

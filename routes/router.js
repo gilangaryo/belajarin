@@ -34,7 +34,7 @@ router.use((req, res, next) => {
 // ... rest of your server setup
 
 
-router.get('/member', getAllMember);
+router.get('member', getAllMember);
 
 router.get('/member/:id', getMember);
 // router.post('/member/:id', updateMember);

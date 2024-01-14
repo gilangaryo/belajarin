@@ -36,7 +36,6 @@ const addMateri = async (req, res) => {
 };
 
 
-
 const getMateriMentor = async (req, res) => {
     const { uid } = req.params;
 
@@ -49,9 +48,30 @@ const getMateriMentor = async (req, res) => {
             const materiData = querySnapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
-            }));
+            }))[0]; // Use [0] to get the first element because it's an array
 
-            res.json(materiData);
+            // Check if materiData contains mentor_id
+            if (materiData && materiData.mentor_id) {
+                // Perform a query to get the mentor data
+                const queryMentor = await db.collection('mentor').where('uid', '==', materiData.mentor_id).get();
+
+                if (!queryMentor.empty) {
+                    // If mentor documents are found, return the data
+                    const mentorData = queryMentor.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+
+                    // Return both materiData and mentorData
+                    res.json({ materiData, mentorData });
+                } else {
+                    // If no mentor documents are found, return a 404 status
+                    res.status(404).json({ error: 'Mentor not found' });
+                }
+            } else {
+                // If no mentor_id is found in materiData, return a 404 status
+                res.status(404).json({ error: 'Mentor_id not found in Materi data' });
+            }
         } else {
             // If no documents are found, return a 404 status
             res.status(404).json({ error: 'Materi not found' });
@@ -61,7 +81,6 @@ const getMateriMentor = async (req, res) => {
         console.error('Error fetching materi:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-
 };
 
 

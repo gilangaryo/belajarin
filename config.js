@@ -3,7 +3,7 @@ require('firebase/storage');
 const fire = require('firebase-admin');
 const { initializeApp, getApp } = require("@firebase/app");
 const { getAuth } = require("@firebase/auth");
-const { Firestore, CollectionReference } = require("firebase/firestore");
+const { Firestore, CollectionReference } = require("@firebase/firestore");
 require('dotenv').config();
 const { getDatabase } = ("firebase/database");
 
@@ -18,14 +18,10 @@ const firebaseConfig = {
 };
 
 const app = firebase.initializeApp(firebaseConfig);
-// const auth = getAuth(app);
+const auth = getAuth(app);
 const db = firebase.firestore();
-// const auth = firebase.auth(app);
-// const db = new Firestore();
-
-// const auth = app.auth();
 
 
 module.exports = db;
 
-// exports.auth = auth;
+exports.auth = auth;

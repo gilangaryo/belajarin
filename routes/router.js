@@ -66,7 +66,7 @@ router.get('/:category/:subMenu', getMateri);
 
 // category :programming :mobile-development :
 
-router.post('/category/:category/:subCategory', addSubcategory);
+// router.post('/category/:category/:subCategory', addSubcategory);
 router.post('/category/:category/:subCategory', addSubcategory);
 
 // send email
@@ -78,13 +78,15 @@ router.post('/addMateri', addMateri);
 
 router.get('/', (req, res) => {
     res.json({
-        'haii': 'terbaru'
+        'haii': 'SELAMAT MALAM !!'
     });
 });
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1000000 } });
 // Handle file upload
 router.post("/upload", upload.single("file"), uploadss);
+
+
 
 
 

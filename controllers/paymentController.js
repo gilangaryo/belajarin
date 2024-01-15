@@ -37,7 +37,7 @@ const pay = async (req, res) => {
     try {
         const uid = crypto.randomUUID();
         const { title, price, selectedDate, selectedTime } = req.body;
-        const { nama } = req.body.mentorData;
+        // const { nama } = req.body.mentorData;
 
         const transaction_id = uid;
 

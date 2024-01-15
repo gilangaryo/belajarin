@@ -1,3 +1,4 @@
+<!-- HTML -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,26 +17,45 @@
             const fileInput = document.getElementById('fileInput');
             const file = fileInput.files[0];
 
-            if (file) {
-                const formData = new FormData();
-                formData.append('file', file);
+            let applicantData = {
+                nama: "John Doe",
+                email: "gilang91668@gmail.com",
+                residenceAddress: "123 Main Street, Cityville",
+                educationalBackground: "Bachelor's in Computer Science",
+                major: "Software Engineering",
+                cv: "Link to CV or attachment",
+                portfolio: "Link to portfolio or projects",
+                bankAccName: "John Doe",
+                bankNumber: "1234567890",
+                bankName: "BCAS"
+            };
 
-                fetch('https://459d-2001-448a-404a-335c-5c6-51cf-12d0-71f4.ngrok-free.app/uploads', {
+            const formData = new FormData();
+
+            // Append the file
+            formData.append('file', file);
+
+            // Append JSON data as a separate field
+            formData.append('json_data', JSON.stringify(applicantData));
+
+            if (file) {
+                fetch('https://6002-180-245-132-50.ngrok-free.app/addMentor', {
                     method: 'POST',
                     body: formData
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log('File uploaded successfully:', data);
+                        console.log('File and JSON uploaded successfully:', data);
                     })
                     .catch(error => {
-                        console.error('Error uploading file:', error);
+                        console.error('Error uploading file and JSON:', error);
                     });
             } else {
                 console.error('No file selected');
             }
         }
     </script>
+
 </body>
 
 </html>

@@ -35,15 +35,16 @@ const addTransaction = async (req, res, transaction_id, price) => {
 
 const pay = async (req, res) => {
     try {
-
-        const { name, uid } = req.body;
+        const uid = crypto.randomUUID();
+        console.log(uid);
+        const { title } = req.body;
         const transaction_id = uid;
         const price = 50000;
         // addTransaction(transaction_id, price, name);
 
 
 
-        if (!transaction_id || !name || !price) {
+        if (!transaction_id || !title || !price) {
             throw new Error("Invalid request. Missing required parameters.");
         }
 
@@ -60,13 +61,15 @@ const pay = async (req, res) => {
                 "gross_amount": price,
             },
             customer_details: {
-                "first_name": name,
+                "first_name": title,
             },
             item_details: {
                 "id": transaction_id,
                 "price": price,
                 "quantity": 1,
-                "name": "belajar javascript bersamakuh"
+                "name": title,
+                "mentor": "MENTOR GILANG",
+                "merchant_name": "BELAJARIN"
             },
         };
 
@@ -78,7 +81,7 @@ const pay = async (req, res) => {
 
 
 
-            res.status(200).json({ message: "berhasil", dataPayment, token: token })
+            res.status(200).json({ message: "berhasil", dataPayment })
         })
 
     } catch (error) {
@@ -92,6 +95,11 @@ const updateTransactionStatus = async (req, res) => {
     const { transaction_id } = req.params;
     const { status } = req.body;
     const transaction = await transactionService.updateTransactionStatus({ transaction_id, status });
+
+
+
+
+
 
     res.json({
         status: 'success',

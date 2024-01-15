@@ -13,20 +13,26 @@ const signUp = async (req, res) => {
         const userCred = userCredential.user;
         const data = req.body;
         const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/profile%2Fprofile.png?alt=media&token=1205b9f2-ba31-4787-834d-1d47ef60b9d3";
-        await member.doc(uid).set({
-            uid: uid,
-            ...data
-        });
+
         const user = firebase.auth().currentUser;
         await user.updateProfile({
             displayName: nama,
             photoURL: img
         });
-
+        await member.doc(uid).set({
+            uid: uid,
+            displayName: nama,
+            photoURL: img,
+            ...data
+        });
         const updatedUser = firebase.auth().currentUser;
         res.send(updatedUser);
     } catch (error) {
-        res.status(400).send(error.message);
+        if (error.code === "auth/email-already-in-use") {
+            res.status(400).send("Email anda sudah terdaftar!");
+        } else {
+            res.status(400).send(error.message);
+        }
     }
 };
 

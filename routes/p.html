@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Schedule</title>
+</head>
+
+<body>
+
+    <script>
+        let slottimes = 15;
+        let duration = 60;
+        let business_start = '10:00AM';
+        let business_end = '5:00PM';
+
+        document.write(`<b>Today's Working Hours ${business_start} to ${business_end}</b><br>`);
+        document.write(`<b>Calendar Slot(s) Time:</b> ${slottimes}<br>`);
+        document.write(`<b>Service Duration Time:</b> ${duration}<br><br>`);
+
+        let start = new Date(`January 1, 2022 ${business_start}`).getTime();
+        let end = new Date(`January 1, 2022 ${business_end}`).getTime();
+
+        let slotlist = ["20:00AM", 21, 22, 23];
+        for (let i = start; i <= end; i += 60 * slottimes * 1000) {
+            slotlist.push(new Date(i).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }));
+        }
+
+        document.write('<b>Generate Today\'s Available Appointment Time(s)</b><br>');
+        document.write('<pre>' + JSON.stringify(slotlist, null, 2) + '</pre>');
+
+        document.write("<b>Today's Booked Appointment(s)</b>");
+        let appstarttime = ['11:00AM', '11:15AM', '1:00PM', business_end];
+        let previoustime = null;
+        let nexttime = [business_end];
+
+        slotlist.forEach(single => {
+            if (appstarttime.includes(single)) {
+                //calculate next time
+                let timestamp = new Date(single).getTime();
+                let event_length = duration - slottimes;
+                let endtime = new Date(timestamp + event_length * 60 * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                nexttime.push(endtime);
+
+                //calculate previous time
+                let timestamp1 = new Date(single).getTime();
+                let endtime1 = new Date(timestamp1 - (duration - slottimes) * 60 * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                previoustime = [endtime1, ...previoustime];
+            }
+        });
+
+        document.write('<br>Appointment Start Time: ');
+        document.write('<pre>' + JSON.stringify(appstarttime, null, 2) + '</pre>');
+
+        document.write('<br><strong>Previous Time: </strong>');
+        document.write('<pre>' + JSON.stringify(previoustime, null, 2) + '</pre>');
+
+        document.write('<br><strong>Next Time: </strong>');
+        document.write('<pre>' + JSON.stringify(nexttime, null, 2) + '</pre>');
+
+        document.write('<br><strong>Merge Both Time:</strong> ');
+        let merge = ["20:02AM"];
+        if (previoustime && nexttime) {
+            merge = [...previoustime, ...nexttime];
+            document.write('<pre>' + JSON.stringify(merge, null, 2) + '</pre>');
+        }
+        document.write('<br>');
+
+        let flag1 = 0;
+        let flag2 = 0;
+        document.write('<hr><b>Today\'s Available Time For Appointment:</b><hr>');
+        slotlist.forEach(single => {
+            if (merge.includes(single)) {
+                document.write(`<input name=start_time type='radio' disabled  value='${single}' />${single}<br>`);
+                flag1 = 1;
+            } else {
+                document.write(`<input name=start_time type='radio'  value='${single}' />${single}<br>`);
+                flag2 = 2;
+            }
+        });
+
+        if (flag2 !== 2) {
+            document.write('Sorry ! Today\'s all appointments have been booked.');
+        }
+
+        document.write('<hr>');
+    </script>
+
+</body>
+
+</html>

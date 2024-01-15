@@ -45,7 +45,9 @@ router.post('/auth/logout', logout);
 
 // MENTOR
 router.get('/allMentor', getAllMentor);
-router.post('/addMentor', addMentor);
+// , upload.single("file")
+const uploads = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1000000 } });
+router.post('/addMentor', uploads.single("file"), addMentor);
 
 
 router.post('/pay', pay);
@@ -76,7 +78,6 @@ router.get('/', (req, res) => {
 });
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1000000 } });
-// Handle file upload
 router.post("/upload", upload.single("file"), uploadss);
 
 
@@ -84,25 +85,25 @@ router.post("/upload", upload.single("file"), uploadss);
 
 
 
-const { database, writeUserData } = require('../configReal');
-router.post('/adduser', (req, res) => {
-    const { userId, name, email, imageUrl } = req.body;
+// const { database, writeUserData } = require('../configReal');
+// router.post('/adduser', (req, res) => {
+//     const { userId, name, email, imageUrl } = req.body;
 
-    // Call the writeUserData function defined in database.js
-    writeUserData(userId, name, email, imageUrl);
+//     // Call the writeUserData function defined in database.js
+//     writeUserData(userId, name, email, imageUrl);
 
-    res.status(200).json({ message: 'User data added successfully' });
-});
+//     res.status(200).json({ message: 'User data added successfully' });
+// });
 
-router.get('/getuserdata/:userId', (req, res) => {
-    const userId = req.params.userId;
+// router.get('/getuserdata/:userId', (req, res) => {
+//     const userId = req.params.userId;
 
-    // Read data from the database
-    const userRef = database.ref('users/' + userId);
-    userRef.once('value', (snapshot) => {
-        const userData = snapshot.val();
-        res.status(200).json(userData);
-    });
-});
+//     // Read data from the database
+//     const userRef = database.ref('users/' + userId);
+//     userRef.once('value', (snapshot) => {
+//         const userData = snapshot.val();
+//         res.status(200).json(userData);
+//     });
+// });
 
 module.exports = router;

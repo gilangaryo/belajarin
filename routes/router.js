@@ -18,9 +18,7 @@ const { pay, trxNotif } = require('../controllers/paymentController');
 const { getAllcategory, getCategory, addSubcategory, getMateri } = require('../controllers/categoryController');
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
 const { addMateri, getMateriMentor } = require('../controllers/materiController');
-const { getBank } = require('../controllers/bank');
 const { uploadss } = require('../controllers/uploadController');
-const { uploadImageku } = require('../controllers/uploadImage');
 
 
 
@@ -62,12 +60,7 @@ router.get('/:category/:subMenu', getMateri);
 
 
 
-// router.get('/category/:category/:subCategory/:subMenu', getSubCategory);
-
-// category :programming :mobile-development :
-
 // router.post('/category/:category/:subCategory', addSubcategory);
-router.post('/category/:category/:subCategory', addSubcategory);
 
 // send email
 router.post('/sendemail', sendEmail);
@@ -111,6 +104,5 @@ router.get('/getuserdata/:userId', (req, res) => {
         res.status(200).json(userData);
     });
 });
-apps.use('/.netlify/routes/router', router);
 
 module.exports = router;

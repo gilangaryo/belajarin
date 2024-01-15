@@ -18,10 +18,12 @@ const signUp = async (req, res) => {
             ...data
         });
         const user = firebase.auth().currentUser;
-        user.updateProfile({
+        await user.updateProfile({
             displayName: nama
-        })
-        res.send(userCred);
+        });
+
+        const updatedUser = firebase.auth().currentUser;
+        res.send(updatedUser);
     } catch (error) {
         res.status(400).send(error.message);
     }

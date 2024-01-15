@@ -7,14 +7,15 @@ require('dotenv').config();
 
 const uploadss = async (req, res) => {
     try {
-        const { auth } = require("../config");
-        console.log(fileku);
+        const { appku } = require("../config");
 
         // await signInWithEmailAndPassword(auth, process.env.FIREBASE_USER, process.env.FIREBASE_AUTH);
-        const storageGet = getStorage(auth);
+        const storageGet = getStorage(appku);
 
         const fileku = req.file;
-        const filename = `imagess/${fileku.originalname}`;
+        console.log(fileku);
+
+        const filename = `image/${fileku.originalname}`;
 
         const dateTime = giveCurrentDateTime();
         const metadata = {

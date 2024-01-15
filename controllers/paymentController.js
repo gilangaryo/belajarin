@@ -36,12 +36,11 @@ const addTransaction = async (req, res, transaction_id, price) => {
 const pay = async (req, res) => {
     try {
         const uid = crypto.randomUUID();
-        const { title, price, selectedDate, selectedTime } = req.body.materiData;
+        const { title, price, selectedDate, selectedTime } = req.body;
         const { nama } = req.body.mentorData;
 
         const transaction_id = uid;
 
-        // const price = 50000;
         // addTransaction(transaction_id, price, name);
 
 
@@ -69,7 +68,7 @@ const pay = async (req, res) => {
                 "price": price,
                 "quantity": 1,
                 "name": title,
-                "mentor": nama,
+                // "mentor": nama,
                 "merchant_name": "BELAJARIN"
             },
         };

@@ -70,31 +70,32 @@ const addMentor = async (req, res) => {
             if (communityName === undefined && communityAccountSign === undefined) {
                 const mentorCollection = db.collection('register');
                 const mentorDocRef = mentorCollection.add({
-                    nama: nama,
-                    email: email,
-                    address: residenceAddress,
-                    education: educationalBackground,
-                    bankAccName: bankAccountName,
-                    bankNumber: bankAccountNumber,
-                    bankName: bank,
+                    nama: jsonData.nama,
+                    email: jsonData.email,
+                    address: jsonData.residenceAddress,
+                    education: jsonData.educationalBackground,
+                    bankAccName: jsonData.bankAccountName,
+                    bankNumber: jsonData.bankAccountNumber,
+                    bankName: jsonData.bankName,
                     // cv: cv,
                     // portfolio: portfolio
                 });
 
                 sendEmail(email);
+                sendEmail(email);
                 res.status(201).json({ message: 'Mentor added successfully', mentorId: mentorDocRef.id });
             } else {
                 const mentorCollection = db.collection('register');
                 const mentorDocRef = mentorCollection.add({
-                    nama: nama,
-                    email: email,
-                    address: residenceAddress,
-                    education: educationalBackground,
-                    communityName: communityName,
-                    communityAcc: communityAccountSign,
-                    bankAccName: bankAccountName,
-                    bankNumber: bankAccountNumber,
-                    bankName: bank
+                    nama: jsonData.nama,
+                    email: jsonData.email,
+                    address: jsonData.residenceAddress,
+                    education: jsonData.educationalBackground,
+                    communityName: jsonData.communityName,
+                    communityAcc: jsonData.communityAccountSign,
+                    bankAccName: jsonData.bankAccountName,
+                    bankNumber: jsonData.bankAccountNumber,
+                    bankName: jsonData.bank
 
                 });
                 sendEmail(email);
@@ -103,9 +104,8 @@ const addMentor = async (req, res) => {
         } else {
             res.status(406).json({ message: 'salah format', bodyna: req.body });
             console.log(req.body);
+
         }
-
-
 
 
 

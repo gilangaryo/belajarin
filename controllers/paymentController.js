@@ -8,8 +8,8 @@ const router = express.Router();
 const crypto = require('crypto');
 const { CANCELLED } = require('dns');
 const { getTransactionById } = require('./orderDataController');
-const serverKey = "SB-Mid-server-3WYrPmzCYkDDDC8DH4QJlqsf";
-
+// const serverKey = "SB-Mid-server-3WYrPmzCYkDDDC8DH4QJlqsf";
+const serverKey = process.env.MIDTRANS_SERVER_KEY;
 
 const addTransaction = async (req, res, transaction_id, price) => {
     try {
@@ -36,12 +36,13 @@ const addTransaction = async (req, res, transaction_id, price) => {
 const pay = async (req, res) => {
     try {
         const uid = crypto.randomUUID();
-        console.log(uid);
-        const { title } = req.body;
-        const transaction_id = uid;
-        const price = 50000;
-        // addTransaction(transaction_id, price, name);
+        const { title, price, selectedDate, selectedTime } = req.body.materiData;
+        const { nama } = req.body.mentorData;
 
+        const transaction_id = uid;
+
+        // const price = 50000;
+        // addTransaction(transaction_id, price, name);
 
 
         if (!transaction_id || !title || !price) {
@@ -61,28 +62,29 @@ const pay = async (req, res) => {
                 "gross_amount": price,
             },
             customer_details: {
-                "first_name": title,
+                "first_name": "dummy nama",
             },
             item_details: {
                 "id": transaction_id,
                 "price": price,
                 "quantity": 1,
                 "name": title,
-                "mentor": "MENTOR GILANG",
+                "mentor": nama,
                 "merchant_name": "BELAJARIN"
             },
         };
 
-        snap.createTransaction(parameter).then((transaction) => {
-            const dataPayment = {
-                response: JSON.stringify(transaction)
-            }
-            const token = transaction.token
+        snap.createTransaction(parameter)
+            .then((transaction) => {
+                const dataPayment = {
+                    response: JSON.stringify(transaction)
+                }
+                const token = transaction.token
 
 
 
-            res.status(200).json({ message: "berhasil", dataPayment })
-        })
+                res.status(200).json({ message: "berhasil", dataPayment, token })
+            })
 
     } catch (error) {
         res.status(400).send(error.message);

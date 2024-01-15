@@ -12,14 +12,15 @@ const signUp = async (req, res) => {
         const uid = userCredential.user.uid;
         const userCred = userCredential.user;
         const data = req.body;
-
+        const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/profile%2Fprofile.png?alt=media&token=1205b9f2-ba31-4787-834d-1d47ef60b9d3";
         await member.doc(uid).set({
             uid: uid,
             ...data
         });
         const user = firebase.auth().currentUser;
         await user.updateProfile({
-            displayName: nama
+            displayName: nama,
+            photoURL: img
         });
 
         const updatedUser = firebase.auth().currentUser;
@@ -49,6 +50,7 @@ const login = async (req, res) => {
                         uid: userCred.uid,
                         user: userCred.displayName,
                         email: userCred.email,
+                        img: userCred.photoURL,
                         msg: "User Logged in",
                         accessToken: idToken
                     });

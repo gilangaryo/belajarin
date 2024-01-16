@@ -105,15 +105,17 @@ const getCategory = async (req, res) => {
 const getMateri = async (req, res) => {
     try {
         const { category, subMenu } = req.params;
-        const subCategory = "mobile-app-development";
-        // Get the category document
-        const categoryDoc = await db.collection("categories").doc(category).get();
 
+
+        // ganti jadi postan jeki
+        const subCategory = "mobile-app-development";
+
+
+        const categoryDoc = await db.collection("categories").doc(category).get();
         if (!categoryDoc.exists) {
-            return res.status(404).json({ error: 'Category not found' });
+            return res.status(404).json({ error: 'Category not foundss' });
         }
 
-        // Get subcategories of the category
         const subcategoriesSnapshot = await categoryDoc.ref.collection("subCategory").get();
         const subcategories = subcategoriesSnapshot.docs.map(doc => ({
             id: doc.id,
@@ -121,7 +123,6 @@ const getMateri = async (req, res) => {
             ...doc.data()
         }));
 
-        // Get submenus of the specified subcategory
         const submenuSnapshot = await categoryDoc.ref.collection(`subCategory/${subCategory}/subMenu`).get();
         const submenus = submenuSnapshot.docs.map(doc => ({
             header: doc.data().title,
@@ -129,19 +130,12 @@ const getMateri = async (req, res) => {
             ...doc.data()
         }));
 
-        // Get materi of the specified submenu
         const materiSnapshot = await categoryDoc.ref.collection(`subCategory/${subCategory}/subMenu/${subMenu}/materi`).get();
         const materi = materiSnapshot.docs.map(doc => ({
             ...doc.data()
         }));
 
-        // Combine the results into a response object
         const response = {
-            // category,
-            // subCategory,
-            // subMenu,
-            // subcategories,
-            // submenus,
             materi
         };
 
@@ -151,13 +145,6 @@ const getMateri = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
-
-
-
-
-
-
 
 
 
@@ -183,35 +170,6 @@ const updatecategory = async (req, res) => {
 
 
 
-const addSubcategory = async (req, res) => {
-    try {
-        const { category, subCategory } = req.params;
-        const categoryRef = db.collection('categories').doc(category);
-        const { title, judul } = req.body;
-
-        if (title) {
-            const subCollectionRef = categoryRef.collection("subCategory").doc(subCategory);
-            const subCollectionRef2 = subCollectionRef.collection("subMenu");
-
-            await subCollectionRef2.doc(judul).set({
-
-                image: 'http',
-                title: title
-
-            });
-            res.status(201).send('Subcollection created successfully');
-        } else {
-            res.status(400).send('Subcollection name is missing in the request body');
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-
-};
-
-
-
 const deletecategory = async (req, res) => {
 
     const uid = req.params.id;
@@ -233,10 +191,8 @@ const deletecategory = async (req, res) => {
 module.exports = {
     getAllcategory,
     getCategory,
-
     updatecategory,
     deletecategory,
-    addSubcategory,
     getMateri
 
 };

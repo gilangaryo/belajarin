@@ -1,28 +1,72 @@
 const express = require('express');
 const router = express.Router();
 const db = require("../config");
+const { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL } = require('@firebase/storage');
+
+const uploadssss = async (imgFile, portfolioFile, regis_id, res) => {
+    try {
+        const { appku } = require("../config");
+        const storageGet = getStorage(appku);
+
+        // Handle the img file
+        const imgFilename = `materi/${imgFile.originalname}`;
+        const imgStorageRef = ref(storageGet, imgFilename);
+        await uploadBytes(imgStorageRef, imgFile.buffer, { contentType: imgFile.mimetype });
+        const imgDownloadURL = await getDownloadURL(imgStorageRef);
+
+        // Update the document in Firestore with download URLs
+        await mentorCollection.doc(regis_id).update({
+            img: imgDownloadURL,
+            portfolio: portfolioDownloadURL
+        });
+
+        console.log('Files successfully uploaded. img Download URL:', imgDownloadURL, 'Portfolio Download URL:', portfolioDownloadURL);
+    } catch (error) {
+        console.error('Error uploading files', error);
+        res.status(400).send(error.message);
+    }
+};
 
 
 const addMateri = async (req, res) => {
     try {
         // const { category, subCategory, subMenu } = req.params;
         const { title, category, subCategory, subMenu, price, rating, description, mentor_id, mentor_name } = req.body;
+        const imgFile = req.files.img[0];
 
         const categoryRef = db.collection('categories').doc(category);
         const subCollectionRef = categoryRef.collection("subCategory").doc(subCategory);
         const subCollectionRef2 = subCollectionRef.collection("subMenu").doc(subMenu);
         const subCollectionRef3 = subCollectionRef2.collection("materi").doc();
 
-        if (title) {
 
-            const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/imagess%2Fpythonnn.png?alt=media&token=b7910944-9334-4a39-aeab-20fe011f289a";
+        if (imgFile) {
+            // const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/imagess%2Fpythonnn.png?alt=media&token=b7910944-9334-4a39-aeab-20fe011f289a";
 
+            uploadssss(imgFile, portfolioFile, regis_id);
             await subCollectionRef3.set({
                 materi_id: subCollectionRef3.id,
                 title: title,
                 description: description,
                 image: img
             });
+
+            const { appku } = require("../config");
+            const storageGet = getStorage(appku);
+
+            // Handle the img file
+            const imgFilename = `materi/${subCollectionRef3.id}/${imgFile.originalname}`;
+            const imgStorageRef = ref(storageGet, imgFilename);
+            await uploadBytes(imgStorageRef, imgFile.buffer, { contentType: imgFile.mimetype });
+            const imgDownloadURL = await getDownloadURL(imgStorageRef);
+
+            // Update the document in Firestore with download URLs
+            await mentorCollection.doc(regis_id).update({
+                img: imgDownloadURL,
+                portfolio: portfolioDownloadURL
+            });
+
+            console.log('Files successfully uploaded. img Download URL:', imgDownloadURL, 'Portfolio Download URL:', portfolioDownloadURL);
 
             res.status(201).send('SUKSES ANJAYY!!');
         } else {

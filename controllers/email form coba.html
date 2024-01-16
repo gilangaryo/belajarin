@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Registration</title>
+    <style>
+        body {
+            font-size: 18px;
+            /* Set the base font size for the entire document */
+        }
+
+        form {
+            max-width: 600px;
+            /* Set the maximum width of the form */
+            margin: 0 auto;
+            /* Center the form horizontally */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Mentor Registration Form</h2>
+    <form action="https://f305-180-245-132-50.ngrok-free.app/addMentor" method="POST" enctype="multipart/form-data"
+        id="mentorForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="gilang" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <label for="residenceAddress">Residence Address:</label>
+        <input type="text" id="residenceAddress" name="residenceAddress" required><br>
+
+        <label for="educationalBackground">Educational Background:</label>
+        <input type="text" id="educationalBackground" name="educationalBackground" required><br>
+
+        <label for="communityName">Community Name:</label>
+        <input type="text" id="communityName" name="communityName"><br>
+
+        <label for="communityAccountSign">Community Account Sign:</label>
+        <input type="text" id="communityAccountSign" name="communityAccountSign"><br>
+
+        <label for="bankAccountName">Bank Account Name:</label>
+        <input type="text" id="bankAccountName" name="bankAccountName" required><br>
+
+        <label for="bankAccountNumber">Bank Account Number:</label>
+        <input type="text" id="bankAccountNumber" name="bankAccountNumber" required><br>
+
+        <label for="bank">Bank:</label>
+        <input type="text" id="bank" name="bank" required><br>
+
+        <label for="cv">Upload CV:</label>
+        <input type="file" id="cv" name="cv" accept="" required><br>
+
+        <label for="portfolio">Upload Portfolio:</label>
+        <input type="file" id="portfolio" name="portfolio" accept="" required><br>
+
+
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+    <script>
+        function submitForm() {
+            const form = document.getElementById('mentorForm');
+            const formData = new FormData(form);
+
+            // Assuming you are using fetch API
+            fetch('https://f305-180-245-132-50.ngrok-free.app/addMentor', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    alert('terkirim!');
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+
+</html>

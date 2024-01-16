@@ -12,8 +12,7 @@ admin.initializeApp({
 });
 
 
-const sendEmail = async (email) => {
-    // const { email } = req.body;
+const sendEmail = async (res, email) => {
     admin
         .firestore()
         .collection("mail")
@@ -21,7 +20,7 @@ const sendEmail = async (email) => {
             to: email,
             message: {
                 subject: "Status Mentor",
-                text: "Hi sayang tunggu 5 hari ya buat ketemu hehehehehe",
+                text: "Hi!!!!!",
                 html: `
                 <html>
                     <head>
@@ -31,7 +30,7 @@ const sendEmail = async (email) => {
                     </head>
                     <body>
                         <h1>Hello from Belajarin</h1>
-                        <p>This is the HTML section of the email body.</p>
+                        <p>HALO KAMU.</p>
                         <code>This is a code snippet.</code>
                     </body>
                 </html>
@@ -39,7 +38,8 @@ const sendEmail = async (email) => {
             },
         })
         .then(() => {
-            console.log("Queued email for delivery!");
+            console.log("Menunggu antrian email!");
+            // res.status(201).send('Menunggu Email!');
 
         })
         .catch((error) => {

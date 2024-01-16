@@ -13,9 +13,9 @@ const serverless = require('serverless-http');
 
 const { getAllMember, getMember, deleteMember, addMember } = require("../controllers/memberController");
 const { getAllMentor, addMentor } = require("../controllers/mentorController");
-const { signUp, login, logout } = require('../controllers/authController');
+const { signUp, login, signUpMentor, loginMentor } = require('../controllers/authController');
 const { pay, trxNotif } = require('../controllers/paymentController');
-const { getAllcategory, getCategory, addSubcategory, getMateri } = require('../controllers/categoryController');
+const { getAllcategory, getCategory, getMateri } = require('../controllers/categoryController');
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
 const { addMateri, getMateriMentor } = require('../controllers/materiController');
 const { uploadss } = require('../controllers/uploadController');
@@ -41,19 +41,21 @@ router.post('/member/add', addMember);
 
 router.post('/auth/signup', signUp);
 router.post('/auth/login', login);
-router.post('/auth/logout', logout);
 
 // MENTOR
 router.get('/allMentor', getAllMentor);
-// , upload.single("file")
-const uploads = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1000000 } });
-router.post('/addMentor', uploads.single("file"), addMentor);
+const uploads = multer({ storage: multer.memoryStorage(), limits: { fileSize: 3000000 } });
+router.post('/addMentor', uploads.fields([{ name: 'cv', maxCount: 1 }, { name: 'portfolio', maxCount: 1 }]), addMentor);
+router.post('/dashboard/register/mentor', signUpMentor);
+router.post('/dashboard/login/mentor', loginMentor);
 
 
 router.post('/pay', pay);
 router.post('/notification', trxNotif);
 
-router.get('/material/:name/:uid', getMateriMentor);
+router.get('/material/:nama/:uid', getMateriMentor);
+
+
 // category
 router.get('/category', getAllcategory);
 router.get('/:category', getCategory);
@@ -69,7 +71,8 @@ router.post('/sendemail', sendEmail);
 router.post('/sendemails', sendEmails);
 
 
-router.post('/addMateri', addMateri);
+// const uploads = multer({ storage: multer.memoryStorage(), limits: { fileSize: 3000000 } });
+router.post('/addMateri', uploads.fields([{ name: 'img', maxCount: 1 }]), addMateri);
 
 router.get('/', (req, res) => {
     res.json({

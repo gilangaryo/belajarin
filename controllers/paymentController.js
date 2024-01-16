@@ -8,13 +8,10 @@ const router = express.Router();
 const crypto = require('crypto');
 const { CANCELLED } = require('dns');
 const { getTransactionById } = require('./orderDataController');
-// const serverKey = "SB-Mid-server-3WYrPmzCYkDDDC8DH4QJlqsf";
 const serverKey = process.env.MIDTRANS_SERVER_KEY;
 
 const addTransaction = async (req, res, transaction_id, price) => {
 
-    // const uid = req.body.transaction_id;
-    // const data = req.body.price;
     const data = price;
     const uid = transaction_id;
 
@@ -88,7 +85,7 @@ const pay = async (req, res) => {
 
 
 
-                res.status(200).json({ message: "Silahkan transaksi", dataPayment, token })
+                res.status(200).json({ message: "berhasil", dataPayment, token })
             })
 
     } catch (error) {
@@ -102,7 +99,7 @@ const updateTransactionStatus = async (req, res) => {
     const { transaction_id } = req.params;
     const { status } = req.body;
     const transaction = await transactionService.updateTransactionStatus({ transaction_id, status });
-    console.log(status);
+
     const data = price;
     const uid = transaction_id;
 
@@ -119,9 +116,6 @@ const updateTransactionStatus = async (req, res) => {
         .catch((error) => {
             console.error("Error writing document: ", error);
         });
-
-
-
 
     res.json({
         status: 'success',
@@ -168,17 +162,21 @@ const updateStatusResponseMidtrans = async (transaction_id, data) => {
 
 const trxNotif = async (req, res) => {
     const data = req.body;
+    const transaction_id = data.transaction_id;
+    console.log(data);
+    console.log(data.transaction_id);
+    console.log(data.status_code);
+    // getTransactionById({
+    //     transaction_id: data.order_id
+    // })
 
-    getTransactionById({
-        transaction_id: data.order_id
-    })
-        .then((transaction) => {
-            if (transaction) {
-                updateStatusResponseMidtrans(transaction.id, data).then(result => {
-                    console.log('result', result);
-                })
-            }
+    // .then((transaction_id) => {
+    if (transaction_id) {
+        updateStatusResponseMidtrans(transaction_id, data).then(result => {
+            console.log('result', result);
         })
+    }
+    // })
     res.status(200).json({
         status: 'success',
         message: 'OK'

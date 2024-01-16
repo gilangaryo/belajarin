@@ -34,19 +34,27 @@ async function getTransactions({ status }) {
 async function getTransactionById({ transaction_id, res }) {
     try {
         const uid = transaction_id;
-        const snapshot = await member.doc(uid).get();
+        const order = db.collection("order");
+
+        const snapshot = await order.doc(uid).get();
 
         if (!snapshot.exists) {
-            return res.status(404).json({ error: 'Member not found' });
+            return res.status(404).json({ error: 'order not found' });
         }
 
-        const memberData = { id: snapshot.id, ...snapshot.data() };
-        res.json(memberData);
+        const orderData = { id: snapshot.id, ...snapshot.data() };
+        console.log(orderData);
+        console.log("Document successfully retrieved!");
     } catch (error) {
-        console.error("Error fetching member:", error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error("Error getting document: ", error);
+
+        // Check if 'res' is defined before trying to use 'json'
+        if (res && typeof res.json === 'function') {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
     }
 }
+
 
 // update transaction status    
 async function updateTransactionStatus({ transaction_id, status, payment_method = null }) {

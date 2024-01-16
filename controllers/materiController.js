@@ -33,9 +33,9 @@ const addMateri = async (req, res) => {
         const db = require('../config');
         // const { category, subCategory, subMenu } = req.params;
         // , mentor_id, mentor_name
-        const mentor_id = "xcpPYjTRcHBFM0gOMyZj";
-        const mentor_name = "jeki";
-        const { title, category, subCategory, subMenu, price, learningPath } = req.body;
+        // const mentor_id = "xcpPYjTRcHBFM0gOMyZj";
+        // const mentor_name = "jeki";
+        const { title, category, subCategory, subMenu, price, learningPath, mentor_id, mentor_name } = req.body;
         const imgFile = req.files.image[0];
 
         console.log(imgFile);
@@ -69,20 +69,23 @@ const addMateri = async (req, res) => {
             });
             console.log("hai berhasil masuk mentor");
 
-            // const { appku } = require("../config");
-            // const storageGet = getStorage(appku);
+            const { appku } = require("../config");
+            const storageGet = getStorage(appku);
 
-            // // Handle the img file
-            // const imgFilename = `materi/${subCollectionRef3.id}/${imgFile.originalname}`;
-            // const imgStorageRef = ref(storageGet, imgFilename);
-            // await uploadBytes(imgStorageRef, imgFile.buffer, { contentType: imgFile.mimetype });
-            // const imgDownloadURL = await getDownloadURL(imgStorageRef);
+            // Handle the img file
+            const imgFilename = `materi/${mentor_id}/${subCollectionRef3.id}/${imgFile.originalname}`;
+            const imgStorageRef = ref(storageGet, imgFilename);
+            await uploadBytes(imgStorageRef, imgFile.buffer, { contentType: imgFile.mimetype });
+            const imgDownloadURL = await getDownloadURL(imgStorageRef);
 
 
-            // await materiMentor.doc(subCollectionRef3.id).update({
-            //     img: imgDownloadURL
-            // });
-            // console.log('Files successfully uploaded. img Download URL:', imgDownloadURL);
+
+            await materiMentorDocRef.update({
+                img: imgDownloadURL
+            });
+
+            console.log('Files successfully uploaded. img Download URL:', imgDownloadURL);
+
 
             res.status(201).send('SUKSES ANJAYY!!');
         } else {

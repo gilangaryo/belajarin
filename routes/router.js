@@ -79,7 +79,7 @@ router.post('/sendemails', sendEmails);
 
 
 // TAMBAH MATERI
-router.post('/addMateri', uploads.fields([{ name: 'image', maxCount: 1 }]), addMateri);
+router.post('/HomeMentor/:mentor_name/:uid/addMateri', uploads.fields([{ name: 'image', maxCount: 1 }]), addMateri);
 
 
 

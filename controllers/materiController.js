@@ -31,11 +31,11 @@ const uploadssss = async (imgFile, portfolioFile, regis_id, res) => {
 const addMateri = async (req, res) => {
     try {
         const db = require('../config');
-        // const { category, subCategory, subMenu } = req.params;
+        const { mentor_name, uid } = req.params;
         // , mentor_id, mentor_name
         // const mentor_id = "xcpPYjTRcHBFM0gOMyZj";
         // const mentor_name = "jeki";
-        const { title, category, subCategory, subMenu, price, learningPath, mentor_id, mentor_name } = req.body;
+        const { title, category, subCategory, subMenu, price, learningPath } = req.body;
         const imgFile = req.files.image[0];
 
         console.log(imgFile);
@@ -51,14 +51,14 @@ const addMateri = async (req, res) => {
 
             await subCollectionRef3.set({
                 materi_id: subCollectionRef3.id,
-                mentor_id: mentor_id,
+                mentor_id: uid,
                 mentor_name: mentor_name,
                 title: title,
                 learning_path: learningPath,
                 price: price
             });
 
-            const mentorCollection = db.collection('mentor').doc(mentor_id);
+            const mentorCollection = db.collection('mentor').doc(uid);
             const materiMentor = mentorCollection.collection("materi");
             const materiMentorDocRef = materiMentor.doc();
             await materiMentorDocRef.set({
@@ -73,7 +73,7 @@ const addMateri = async (req, res) => {
             const storageGet = getStorage(appku);
 
             // Handle the img file
-            const imgFilename = `materi/${mentor_id}/${subCollectionRef3.id}/${imgFile.originalname}`;
+            const imgFilename = `materi/${uid}/${subCollectionRef3.id}/${imgFile.originalname}`;
             const imgStorageRef = ref(storageGet, imgFilename);
             await uploadBytes(imgStorageRef, imgFile.buffer, { contentType: imgFile.mimetype });
             const imgDownloadURL = await getDownloadURL(imgStorageRef);

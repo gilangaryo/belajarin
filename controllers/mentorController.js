@@ -81,6 +81,7 @@ const addMentor = async (req, res) => {
                 //     description: description,
                 //     image: img
                 // });
+
                 const mentorDocRef = mentorCollection.doc();
                 await mentorDocRef.set({
                     reg_id: mentorDocRef.id,

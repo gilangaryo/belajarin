@@ -8,7 +8,7 @@ const getAllcategory = async (req, res) => {
 
     try {
         const categoriesSnapshot = await categoryCollection.get();
-        const allCategories = [];
+        const allCategories3 = [];
 
         for (const categoryDoc of categoriesSnapshot.docs) {
             const categoryId = categoryDoc.id;
@@ -50,6 +50,131 @@ const getAllcategory = async (req, res) => {
                 categoryWithSubMenu.subCategory.push(subCategoryWithMenu);
             }
 
+            allCategories3.push(categoryWithSubMenu);
+        }
+
+        res.send(allCategories3);
+    } catch (error) {
+        // Handle errors, e.g., by sending an error response
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+
+
+const getAllCat = async (req, res) => {
+    const categoryCollection = db.collection("categories");
+
+    try {
+        const categoriesSnapshot = await categoryCollection.get();
+        const allCategories = [];
+        const allCategories2 = [];
+
+        for (const categoryDoc of categoriesSnapshot.docs) {
+            const categoryId = categoryDoc.id;
+            const subCollectionRef = categoryDoc.ref.collection('subCategory');
+
+            const subCollectionSnapshot = await subCollectionRef.get();
+            const subCollection = subCollectionSnapshot.docs.map((doc) => ({
+                key: categoryId,
+                label: categoryDoc.title,
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            const categoryWithSubMenu = {
+
+                category_id: categoryId,
+                category_title: categoryDoc.data().title,
+                subCategory: []
+            };
+
+            allCategories2.push(categoryWithSubMenu);
+
+
+        }
+        res.send(allCategories2);
+    } catch (error) {
+        // Handle errors, e.g., by sending an error response
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+const getAllSubCategory = async (req, res) => {
+    const categoryCollection = db.collection("categories");
+
+    try {
+        const categoriesSnapshot = await categoryCollection.get();
+        const allCategories = [];
+        const allSubCat = [];
+
+        for (const categoryDoc of categoriesSnapshot.docs) {
+            const categoryId = categoryDoc.id;
+            const subCollectionRef = categoryDoc.ref.collection('subCategory');
+
+            const subCollectionSnapshot = await subCollectionRef.get();
+            const subCollection = subCollectionSnapshot.docs.map((doc) => ({
+                key: categoryId,
+                label: categoryDoc.title,
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            allSubCat.push(subCollection);
+        }
+
+        res.send(allSubCat);
+    } catch (error) {
+        // Handle errors, e.g., by sending an error response
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+const getAllSubMenu = async (req, res) => {
+    const categoryCollection = db.collection("categories");
+
+    try {
+        const categoriesSnapshot = await categoryCollection.get();
+        const allCategories = [];
+
+        for (const categoryDoc of categoriesSnapshot.docs) {
+            const categoryId = categoryDoc.id;
+            const subCollectionRef = categoryDoc.ref.collection('subCategory');
+
+            const subCollectionSnapshot = await subCollectionRef.get();
+            const subCollection = subCollectionSnapshot.docs.map((doc) => ({
+                key: categoryId,
+                label: categoryDoc.title,
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            const categoryWithSubMenu = {
+
+                category_id: categoryId,
+                category_title: categoryDoc.data().title,
+                subCategory: []
+            };
+
+            for (const subCatItem of subCollection) {
+                const subMenuRef = subCollectionRef.doc(subCatItem.id).collection('subMenu');
+                const subMenuSnapshot = await subMenuRef.get();
+
+                const submenu = subMenuSnapshot.docs.map((doc) => ({
+
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                const subCategoryWithMenu = {
+
+
+                    subMenu: submenu,
+                };
+
+                categoryWithSubMenu.subCategory.push(subCategoryWithMenu);
+            }
+
             allCategories.push(categoryWithSubMenu);
         }
 
@@ -62,6 +187,8 @@ const getAllcategory = async (req, res) => {
 
 
 
+
+
 // fixxxxxxx
 const getCategory = async (req, res) => {
     try {
@@ -70,7 +197,7 @@ const getCategory = async (req, res) => {
         const categoryDoc = await db.collection("categories").doc(category).get();
 
         if (!categoryDoc.exists) {
-            return res.status(404).json({ error: 'Category not found' });
+            return res.status(404).json({ error: 'Category not foundaa' });
         }
 
         const subcategoriesSnapshot = await categoryDoc.ref.collection("subCategory").get();
@@ -99,6 +226,7 @@ const getCategory = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 
@@ -193,6 +321,10 @@ module.exports = {
     getCategory,
     updatecategory,
     deletecategory,
-    getMateri
+    getMateri,
+
+    getAllCat,
+    getAllSubCategory,
+    getAllSubMenu
 
 };

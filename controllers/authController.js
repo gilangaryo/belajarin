@@ -40,44 +40,48 @@ const signUp = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-
         if (!req.body) {
             res.send("halo jek");
-        };
+            return;
+        }
+
         const { email, password } = req.body;
         const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
         const userCred = userCredential.user;
-        const user = await firebase.auth().currentUser;
 
+        // Retrieve user document from Firestore
+        const userRef = member.doc(userCred.uid);
+        const userDoc = await userRef.get();
 
-        if (user) {
-            user.getIdToken(true)
-                .then((idToken) => {
-                    res.send({
-                        uid: userCred.uid,
-                        user: userCred.displayName,
-                        email: userCred.email,
-                        img: userCred.photoURL,
-                        msg: "User Logged in",
-                        accessToken: idToken
-                    });
+        if (userCred) {
+            // Get the user's ID token
+            const idToken = await userCred.getIdToken(true);
 
-                })
-                .catch((error) => {
-                    res.status(500).send({
-                        error: error.message
-                    });
-                });
+            // Access the user document and role
+            const role = userDoc.data().role;
+
+            res.send({
+                uid: userCred.uid,
+                user: userCred.displayName,
+                email: userCred.email,
+                img: userCred.photoURL,
+                role: role,
+                msg: "User Logged in",
+                accessToken: idToken
+            });
         } else {
             res.status(401).send({
                 error: 'User not authenticated'
             });
         }
-
     } catch (error) {
-        res.status(400).send(error.message);
+        console.error('Login error:', error);
+        res.status(500).send({
+            error: 'Internal Server Error'
+        });
     }
 };
+
 
 
 const signUpMentor = async (req, res) => {
@@ -99,6 +103,7 @@ const signUpMentor = async (req, res) => {
             uid: uid,
             displayName: nama,
             photoURL: img,
+            role: "mentor",
             ...data
         });
         const updatedUser = firebase.auth().currentUser;

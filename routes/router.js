@@ -15,7 +15,7 @@ const { getAllMember, getMember, deleteMember, addMember } = require("../control
 const { getAllMentor, addMentor } = require("../controllers/mentorController");
 const { signUp, login, signUpMentor, loginMentor } = require('../controllers/authController');
 const { pay, trxNotif } = require('../controllers/paymentController');
-const { getAllcategory, getCategory, getMateri } = require('../controllers/categoryController');
+const { getAllcategory, getCategory, getMateri, getAllCat, getAllSubCategory, getAllSubMenu } = require('../controllers/categoryController');
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
 const { addMateri, getMateriMentor } = require('../controllers/materiController');
 const { uploadss } = require('../controllers/uploadController');
@@ -58,8 +58,12 @@ router.get('/material/:nama/:uid', getMateriMentor);
 
 // category
 router.get('/category', getAllcategory);
-router.get('/:category', getCategory);
+router.get('/category/all', getAllCat);
+router.get('/category/allSubCat', getAllSubCategory);
+router.get('/category/allSubMenu', getAllSubMenu);
+// router.get('/:category', getCategory);
 router.get('/:category/:subMenu', getMateri);
+
 
 
 
@@ -71,8 +75,11 @@ router.post('/sendemail', sendEmail);
 router.post('/sendemails', sendEmails);
 
 
-// const uploads = multer({ storage: multer.memoryStorage(), limits: { fileSize: 3000000 } });
-router.post('/addMateri', uploads.fields([{ name: 'img', maxCount: 1 }]), addMateri);
+
+// TAMBAH MATERI
+router.post('/addMateri', uploads.fields([{ name: 'image', maxCount: 1 }]), addMateri);
+
+
 
 router.get('/', (req, res) => {
     res.json({

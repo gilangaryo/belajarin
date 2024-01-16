@@ -30,10 +30,16 @@ const uploadssss = async (imgFile, portfolioFile, regis_id, res) => {
 
 const addMateri = async (req, res) => {
     try {
+        const db = require('../config');
         // const { category, subCategory, subMenu } = req.params;
-        const { title, category, subCategory, subMenu, price, rating, description, mentor_id, mentor_name } = req.body;
-        const imgFile = req.files.img[0];
+        // , mentor_id, mentor_name
+        const mentor_id = "xcpPYjTRcHBFM0gOMyZj";
+        const mentor_name = "jeki";
+        const { title, category, subCategory, subMenu, price, learningPath } = req.body;
+        const imgFile = req.files.image[0];
 
+        console.log(imgFile);
+        console.log(req.body);
         const categoryRef = db.collection('categories').doc(category);
         const subCollectionRef = categoryRef.collection("subCategory").doc(subCategory);
         const subCollectionRef2 = subCollectionRef.collection("subMenu").doc(subMenu);
@@ -43,30 +49,40 @@ const addMateri = async (req, res) => {
         if (imgFile) {
             // const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/imagess%2Fpythonnn.png?alt=media&token=b7910944-9334-4a39-aeab-20fe011f289a";
 
-            uploadssss(imgFile, portfolioFile, regis_id);
             await subCollectionRef3.set({
                 materi_id: subCollectionRef3.id,
+                mentor_id: mentor_id,
+                mentor_name: mentor_name,
                 title: title,
-                description: description,
-                image: img
+                learning_path: learningPath,
+                price: price
             });
 
-            const { appku } = require("../config");
-            const storageGet = getStorage(appku);
-
-            // Handle the img file
-            const imgFilename = `materi/${subCollectionRef3.id}/${imgFile.originalname}`;
-            const imgStorageRef = ref(storageGet, imgFilename);
-            await uploadBytes(imgStorageRef, imgFile.buffer, { contentType: imgFile.mimetype });
-            const imgDownloadURL = await getDownloadURL(imgStorageRef);
-
-            // Update the document in Firestore with download URLs
-            await mentorCollection.doc(regis_id).update({
-                img: imgDownloadURL,
-                portfolio: portfolioDownloadURL
+            const mentorCollection = db.collection('mentor').doc(mentor_id);
+            const materiMentor = mentorCollection.collection("materi");
+            const materiMentorDocRef = materiMentor.doc();
+            await materiMentorDocRef.set({
+                materi_id: subCollectionRef3.id,
+                title: title,
+                learningPath: learningPath,
+                price: price
             });
+            console.log("hai berhasil masuk mentor");
 
-            console.log('Files successfully uploaded. img Download URL:', imgDownloadURL, 'Portfolio Download URL:', portfolioDownloadURL);
+            // const { appku } = require("../config");
+            // const storageGet = getStorage(appku);
+
+            // // Handle the img file
+            // const imgFilename = `materi/${subCollectionRef3.id}/${imgFile.originalname}`;
+            // const imgStorageRef = ref(storageGet, imgFilename);
+            // await uploadBytes(imgStorageRef, imgFile.buffer, { contentType: imgFile.mimetype });
+            // const imgDownloadURL = await getDownloadURL(imgStorageRef);
+
+
+            // await materiMentor.doc(subCollectionRef3.id).update({
+            //     img: imgDownloadURL
+            // });
+            // console.log('Files successfully uploaded. img Download URL:', imgDownloadURL);
 
             res.status(201).send('SUKSES ANJAYY!!');
         } else {
@@ -128,46 +144,6 @@ const getMateriMentor = async (req, res) => {
 };
 
 
-
-const getMateriMentor2 = async (req, res) => {
-
-    try {
-        const { uid } = req.params;
-        // const { uid, nama, email, profilePic } = req.body;
-        const { category, subCategory, subMenu } = req.body;
-        // const category = req.body.category;
-        console.log(category);
-
-        // console.log(subCategory);
-        // console.log(subMenu);
-        // ambil kategori
-        const categoryRef = db.collection('categories').doc(category);
-
-
-        // // ambil subkategori
-        const subCategoryRef = categoryRef.collection("subCategory").doc(subCategory);
-
-        // // ambil submenu
-        const subMenuRef = subCategoryRef.collection("subMenu").doc(subMenu);
-
-        // // ambil materi
-        const materiRef = subMenuRef.collection("materi").doc(uid);
-
-        const snapshot = await materiRef.get();
-
-        if (snapshot) {
-            const submenu = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            res.send(submenu);
-        }
-
-    } catch (error) {
-        // Handle errors, e.g., by sending an error response
-        res.status(500).send("Internal Server Error");
-    }
-};
 
 
 module.exports = {

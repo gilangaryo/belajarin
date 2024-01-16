@@ -12,36 +12,42 @@ const { getTransactionById } = require('./orderDataController');
 const serverKey = process.env.MIDTRANS_SERVER_KEY;
 
 const addTransaction = async (req, res, transaction_id, price) => {
-    try {
-        const data = price;
-        const uid = transaction_id;
 
-        if (!uid) {
+    // const uid = req.body.transaction_id;
+    // const data = req.body.price;
+    const data = price;
+    const uid = transaction_id;
 
+    console.log(transaction_id);
 
-            return res.status(400).json({ error: 'Invalid request. Missing id parameter.' });
-        }
-
-        const newMemberDoc = await member.doc(uid).set({
-            ...data
+    db.collection("order").doc(uid).set({
+        order_id: uid,
+        price: data
+    })
+        .then(() => {
+            console.log("Document successfully written!");
+        })
+        .catch((error) => {
+            console.error("Error writing document: ", error);
         });
-
-    } catch (error) {
-        console.error("Error add:", error);
-        return res.status(500).json({ error: 'Internal Server Error' });
-    }
 };
+
 
 
 const pay = async (req, res) => {
     try {
         const uid = crypto.randomUUID();
-        const { title, price, selectedDate, selectedTime } = req.body;
-        // const { nama } = req.body.mentorData;
+        const { title, price, selectedDate } = req.body;
+        const { startTime, endTime, label, value } = req.body.selectedTime;
 
         const transaction_id = uid;
+        console.log(selectedDate);
+        console.log(startTime);
+        console.log(endTime);
+        console.log(label);
+        console.log(value);
 
-        // addTransaction(transaction_id, price, name);
+        addTransaction(req, res, transaction_id, price);
 
 
         if (!transaction_id || !title || !price) {
@@ -82,7 +88,7 @@ const pay = async (req, res) => {
 
 
 
-                res.status(200).json({ message: "berhasil", dataPayment, token })
+                res.status(200).json({ message: "Silahkan transaksi", dataPayment, token })
             })
 
     } catch (error) {
@@ -96,8 +102,23 @@ const updateTransactionStatus = async (req, res) => {
     const { transaction_id } = req.params;
     const { status } = req.body;
     const transaction = await transactionService.updateTransactionStatus({ transaction_id, status });
+    console.log(status);
+    const data = price;
+    const uid = transaction_id;
 
+    console.log(transaction_id);
 
+    db.collection("order").doc(uid).set({
+        order_id: uid,
+        price: data,
+        status: status
+    })
+        .then(() => {
+            console.log("Document successfully written!");
+        })
+        .catch((error) => {
+            console.error("Error writing document: ", error);
+        });
 
 
 

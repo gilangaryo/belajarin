@@ -9,6 +9,7 @@ const multer = require('multer');
 
 const apps = express();
 const serverless = require('serverless-http');
+const cors = require('cors');
 
 
 const { getAllMember, getMember, deleteMember, addMember } = require("../controllers/memberController");
@@ -21,6 +22,7 @@ const { addMateri, getMateriMentor } = require('../controllers/materiController'
 const { uploadss } = require('../controllers/uploadController');
 
 
+router.use(cors());
 
 router.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');

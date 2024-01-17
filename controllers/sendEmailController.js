@@ -12,7 +12,7 @@ admin.initializeApp({
 });
 
 
-const sendEmail = async (res, email) => {
+const sendEmail = async (email, res) => {
     admin
         .firestore()
         .collection("mail")

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require("../config");
 const { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL } = require('@firebase/storage');
-const { sendEmail } = require('../controllers/sendEmailController');
+const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
 const mentor = db.collection("mentor");
 const mentorCollection = db.collection('register');
 const getAllMentor = async (req, res) => {
@@ -24,19 +24,19 @@ const uploadssss = async (cvFile, portfolioFile, keanggotaanFile, regis_id, res)
         const storageGet = getStorage(appku);
 
         // Handle the CV file
-        const cvFilename = `cv/${cvFile.originalname}`;
+        const cvFilename = `register/${regis_id}/cv/${cvFile.originalname}`;
         const cvStorageRef = ref(storageGet, cvFilename);
         await uploadBytes(cvStorageRef, cvFile.buffer, { contentType: cvFile.mimetype });
         const cvDownloadURL = await getDownloadURL(cvStorageRef);
 
         // Handle the portfolio file
-        const portfolioFilename = `portfolio/${portfolioFile.originalname}`;
+        const portfolioFilename = `register/${regis_id}/portfolio/${portfolioFile.originalname}`;
         const portfolioStorageRef = ref(storageGet, portfolioFilename);
         await uploadBytes(portfolioStorageRef, portfolioFile.buffer, { contentType: portfolioFile.mimetype });
         const portfolioDownloadURL = await getDownloadURL(portfolioStorageRef);
 
         // Handle the portfolio file
-        const keanggotaanFilename = `portfolio/${keanggotaanFile.originalname}`;
+        const keanggotaanFilename = `register/${regis_id}/keanggotaan/${keanggotaanFile.originalname}`;
         const keanggotaanStorageRef = ref(storageGet, keanggotaanFilename);
         await uploadBytes(keanggotaanStorageRef, keanggotaanFile.buffer, { contentType: keanggotaanFile.mimetype });
         const keanggotaanDownloadURL = await getDownloadURL(keanggotaanStorageRef);
@@ -62,14 +62,18 @@ const uploadssss = async (cvFile, portfolioFile, keanggotaanFile, regis_id, res)
 const addMentor = async (req, res) => {
     try {
 
+        console.log("filessnya: ", req.files);
+        // console.log("FILE REQUESTNYAA  ", req);
         const cvFile = req.files.cv[0];
+        console.log(cvFile);
+        console.log(req.body);
         const portfolioFile = req.files.portfolio[0];
 
 
         const image = req.file;
         const member = db.collection("member");
         const {
-            name,
+            nama,
             email,
             residenceAddress,
             educationalBackground,
@@ -79,7 +83,7 @@ const addMentor = async (req, res) => {
             bank,
         } = req.body;
 
-        if (name) {
+        if (nama) {
             if (communityName) {
                 // const subCollectionRef3 = subCollectionRef2.collection("materi").doc();
                 // await subCollectionRef3.set({
@@ -92,7 +96,7 @@ const addMentor = async (req, res) => {
                 const mentorDocRef = mentorCollection.doc();
                 await mentorDocRef.set({
                     reg_id: mentorDocRef.id,
-                    name: name,
+                    name: nama,
                     email: email,
                     address: residenceAddress,
                     communityName: communityName,
@@ -106,14 +110,14 @@ const addMentor = async (req, res) => {
                 const regis_id = mentorDocRef.id;
                 console.log("idnya", regis_id);
                 uploadssss(cvFile, portfolioFile, keanggotaanFile, regis_id);
-                sendEmail(email, name);
+                sendEmail(email);
                 res.status(201).json({ message: 'Mentor added successfully', mentorId: mentorDocRef.id });
             } else {
 
                 const mentorDocRef = mentorCollection.doc();
                 await mentorDocRef.set({
                     reg_id: mentorDocRef.id,
-                    name: name,
+                    name: nama,
                     email: email,
                     address: residenceAddress,
                     education: educationalBackground,
@@ -125,7 +129,7 @@ const addMentor = async (req, res) => {
                 const regis_id = mentorDocRef.id;
                 console.log("idnya", regis_id);
                 uploadssss(cvFile, portfolioFile, regis_id);
-                sendEmail(email, name);
+                sendEmail(email);
                 console.log("community");
                 res.status(201).json({ message: 'Mentor community added successfully', mentorId: mentorCollection.doc.id });
             }

@@ -72,7 +72,7 @@ router.get('/category/allSubMenu', getAllSubMenu);
 router.get('/:category', getCategory);
 
 // get all materi by category 
-// router.get('/:category/:subMenu', getMateribyCategory);  
+// router.get('/:category/:subMenu', getMateribyCategory);
 router.get('/:category/:subMenu', getCategorySubMenuAllMateri);
 
 // detail kelas

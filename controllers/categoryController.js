@@ -237,14 +237,14 @@ const getCategorySubMenuAllMateri = async (req, res) => {
             .where("subMenu", "==", subMenu)
             .get();
 
-        const materiData = materiSnapshot.docs.map(doc => ({
+        const materi = materiSnapshot.docs.map(doc => ({
             document_id: doc.ref.parent.parent.id,
             materi_id: doc.id,
             ...doc.data()
         }));
 
-        if (materiData.length > 0) {
-            res.json({ materiData });
+        if (materi.length > 0) {
+            res.json({ materi });
         } else {
             res.status(404).json({ error: 'Data not found' });
         }

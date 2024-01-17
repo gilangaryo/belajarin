@@ -37,9 +37,18 @@ const addMateri = async (req, res) => {
         // const mentor_name = "jeki";
         const { title, selectedCategory, selectedSubCategory, selectedSubMenu, price, learningPath } = req.body;
 
+        console.log(uid);
+        const registerDoc = await db.collection("mentor").doc(uid).get();
+        if (!registerDoc.exists) {
+            return res.status(404).json({ error: 'Mentor not found' });
+        }
+        const name = registerDoc.data().nama;
+        console.log(name);
+        console.log("NAMANYAAAA : ", name);
 
-        console.log("halo", req.files);
-        console.log("halo file", req.file);
+        // console.log(nama);
+        // console.log("halo", req.files);
+        // console.log("halo file", req.file);
 
         // console.log(imgFile);
         console.log("hai body", req.body);
@@ -53,12 +62,11 @@ const addMateri = async (req, res) => {
 
         if (uid) {
             // const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/imagess%2Fpythonnn.png?alt=media&token=b7910944-9334-4a39-aeab-20fe011f289a";
-            const registerDoc = await db.collection("mentor").doc(uid).get();
-            const nama = registerDoc.data().name;
+
             await subCollectionRef3.set({
                 materi_id: subCollectionRef3.id,
                 mentor_id: uid,
-                mentor_name: nama,
+                mentor_name: name,
                 title: title,
                 learning_path: learningPath,
                 price: price,

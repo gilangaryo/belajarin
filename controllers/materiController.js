@@ -38,9 +38,6 @@ const addMateri = async (req, res) => {
         const { title, selectedCategory, selectedSubCategory, selectedSubMenu, price, learningPath } = req.body;
 
 
-        const mentor_name = "tes ganti nama";
-
-
         console.log("halo", req.files);
         console.log("halo file", req.file);
 
@@ -52,13 +49,16 @@ const addMateri = async (req, res) => {
         const subCollectionRef3 = subCollectionRef2.collection("materi").doc();
 
 
+
+
         if (uid) {
             // const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/imagess%2Fpythonnn.png?alt=media&token=b7910944-9334-4a39-aeab-20fe011f289a";
-
+            const registerDoc = await db.collection("mentor").doc(uid).get();
+            const nama = registerDoc.data().name;
             await subCollectionRef3.set({
                 materi_id: subCollectionRef3.id,
                 mentor_id: uid,
-                mentor_name: mentor_name,
+                mentor_name: nama,
                 title: title,
                 learning_path: learningPath,
                 price: price,

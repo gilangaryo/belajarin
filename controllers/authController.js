@@ -14,7 +14,7 @@ const signUp = async (req, res) => {
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
 
         const uid = userCredential.user.uid;
-        const userCred = userCredential.user;
+        // const userCred = userCredential.user;
         const data = req.body;
         const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/profile%2Fprofile.png?alt=media&token=1205b9f2-ba31-4787-834d-1d47ef60b9d3";
 
@@ -27,6 +27,7 @@ const signUp = async (req, res) => {
             uid: uid,
             displayName: nama,
             photoURL: img,
+            role: "member",
             ...data
         });
         const updatedUser = firebase.auth().currentUser;
@@ -87,51 +88,6 @@ const login = async (req, res) => {
 
 
 
-const daftarMentorByAdmin = async (req, res) => {
-    try {
-
-        const { nama, email, password, id } = req.body;
-        const registerDoc = await db.collection("register").doc(id).get();
-
-        if (registerDoc.exists) {
-            const registerData = {
-                id: registerDoc.id,
-                ...registerDoc.data()
-            };
-            console.log(registerData);
-            res.json({ registerData });
-        } else {
-            res.status(404).json({ error: 'Register data not found' });
-        }
-
-        const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-
-        const uid = userCredential.user.uid;
-        const data = req.body;
-        const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/profile%2Fprofile.png?alt=media&token=1205b9f2-ba31-4787-834d-1d47ef60b9d3";
-
-        const user = firebase.auth().currentUser;
-        await user.updateProfile({
-            displayName: nama,
-            photoURL: img
-        });
-        await mentor.doc(uid).set({
-            uid: uid,
-            displayName: nama,
-            photoURL: img,
-            role: "mentor",
-            ...data
-        });
-        const updatedUser = firebase.auth().currentUser;
-        res.send(updatedUser);
-    } catch (error) {
-        if (error.code === "auth/email-already-in-use") {
-            res.status(400).send("Email sudah terdaftar!");
-        } else {
-            res.status(400).send(error.message);
-        }
-    }
-};
 const loginMentor = async (req, res) => {
     try {
 
@@ -172,29 +128,93 @@ const loginMentor = async (req, res) => {
         res.status(400).send(error.message);
     }
 };
-const accMentor = async (req, res) => {
-    try {
-        const idRegMentor = req.body.id;
-        const snapshot = await mentor.doc(idRegMentor).get();
 
-        if (!snapshot.exists) {
-            return res.status(404).json({ error: 'Mentor not found' });
+
+
+const daftarMentorByAdmin = async (req, res) => {
+    try {
+
+        const { nama, email, password, id } = req.body;
+        const registerDoc = await db.collection("register").doc(id).get();
+
+        if (registerDoc.exists) {
+            const registerData = {
+                id: registerDoc.id,
+                ...registerDoc.data()
+            };
+            console.log(registerData);
+            res.json({ registerData });
+        } else {
+            res.status(404).json({ error: 'Register data not found' });
         }
 
-        const nama = snapshot.data().name;
-        const email = snapshot.data().email;
+        const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
 
-        const mentorCollection = db.collection('mentor').doc(uid);
-        const materiMentor = mentorCollection.collection("materi");
-        const materiMentorDocRef = materiMentor.doc();
-        await materiMentorDocRef.set({
-            materi_id: subCollectionRef3.id,
-            title: title,
-            learningPath: learningPath,
-            price: price
+        const uid = userCredential.user.uid;
+        const data = req.body;
+
+
+        const user = firebase.auth().currentUser;
+        await user.updateProfile({
+            displayName: nama,
+            photoURL: img
         });
-        sendEmail(email, nama);
+        await mentor.doc(uid).set({
+            uid: uid,
+            displayName: nama,
+            photoURL: img,
+            role: "mentor",
+            ...data
+        });
+        const updatedUser = firebase.auth().currentUser;
+        res.send(updatedUser);
+    } catch (error) {
+        if (error.code === "auth/email-already-in-use") {
+            res.status(400).send("Email sudah terdaftar!");
+        } else {
+            res.status(400).send(error.message);
+        }
+    }
+};
 
+const accMentor = async (req, res) => {
+    try {
+        console.log(req.body);
+        const { id } = req.body;
+        const registerDoc = await db.collection("register").doc(id).get();
+
+        console.log(registerDoc.data());
+        if (!registerDoc.exists) {
+            return res.status(404).json({ error: 'Mentor reg not found' });
+        }
+
+        const nama = registerDoc.data().name;
+        const email = registerDoc.data().email;
+
+        const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+
+        const uid = userCredential.user.uid;
+        const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/profile%2Fprofile.png?alt=media&token=1205b9f2-ba31-4787-834d-1d47ef60b9d3";
+        const mentorCollection = db.collection('mentor').doc(id);
+        const registerSubcollectionRef = mentorCollection.collection('register').doc(id);
+        await mentorCollection.set({
+            uid: id,
+            displayName: nama,
+            photoURL: img,
+            role: "mentor",
+
+        });
+        await registerSubcollectionRef.set({
+            ...registerDoc.data()
+        });
+
+        // FUNGSI DELETE
+
+        // db.collection("register").doc(id).delete().then(() => {
+        //     console.log("Document successfully deleted!");
+        // }).catch((error) => {
+        //     console.error("Error removing document: ", error);
+        // });
 
         res.status(200).json({ message: 'Mentor account created successfully' });
     } catch (error) {
@@ -208,6 +228,7 @@ const accMentor = async (req, res) => {
         }
     }
 };
+
 
 const logout = async (req, res) => {
     try {

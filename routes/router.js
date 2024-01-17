@@ -14,7 +14,7 @@ const cors = require('cors');
 
 const { getAllMember, getMember, deleteMember, addMember } = require("../controllers/memberController");
 const { getAllMentor, addMentor, getAllDate } = require("../controllers/mentorController");
-const { signUp, login, daftarMentorByAdmin, loginMentor } = require('../controllers/authController');
+const { signUp, login, daftarMentorByAdmin, loginMentor, accMentor } = require('../controllers/authController');
 const { pay, trxNotif } = require('../controllers/paymentController');
 const { getAllcategory, getCategory, getAllCat, getAllSubCategory, getAllSubMenu, getMateribyCategory, getCategorySubMenuAllMateri } = require('../controllers/categoryController');
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
@@ -103,7 +103,7 @@ router.post("/upload", upload.single("file"), uploadss);
 
 
 // ADMIN 
-router.post('/admin/register/mentor', daftarMentorByAdmin);
+router.post('/admin/register/mentor', accMentor);
 
 
 module.exports = router;

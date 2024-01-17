@@ -230,7 +230,7 @@ const getCategory = async (req, res) => {
 
 
 
-const getMateri = async (req, res) => {
+const getMateribyCategory = async (req, res) => {
     try {
         const { category, subMenu } = req.params;
 
@@ -344,7 +344,7 @@ module.exports = {
     getCategory,
     updatecategory,
     deletecategory,
-    getMateri,
+    getMateribyCategory,
     getAllCat,
     getAllSubCategory,
     getAllSubMenu

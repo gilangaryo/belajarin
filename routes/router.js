@@ -16,9 +16,9 @@ const { getAllMember, getMember, deleteMember, addMember } = require("../control
 const { getAllMentor, addMentor } = require("../controllers/mentorController");
 const { signUp, login, signUpMentor, loginMentor } = require('../controllers/authController');
 const { pay, trxNotif } = require('../controllers/paymentController');
-const { getAllcategory, getCategory, getMateri, getAllCat, getAllSubCategory, getAllSubMenu } = require('../controllers/categoryController');
+const { getAllcategory, getCategory, getAllCat, getAllSubCategory, getAllSubMenu, getMateribyCategory } = require('../controllers/categoryController');
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
-const { addMateri, getMateriMentor } = require('../controllers/materiController');
+const { addMateri, getMateriMentor, getAllMateriMentor } = require('../controllers/materiController');
 const { uploadss } = require('../controllers/uploadController');
 
 
@@ -58,7 +58,6 @@ router.post('/pay', pay);
 router.post('/notification', trxNotif);
 
 
-router.get('/material/:nama/:uid', getMateriMentor);
 
 
 // category
@@ -68,8 +67,11 @@ router.get('/category/allSubCat', getAllSubCategory);
 router.get('/category/allSubMenu', getAllSubMenu);
 
 router.get('/:category', getCategory);
-router.get('/:category/:subMenu', getMateri);
+// get all materi by category 
+router.get('/:category/:subMenu', getMateribyCategory);
 
+router.get('/material/:nama/:uid', getMateriMentor);
+router.get('/HomeMentor/:mentor_name/:mentor_id', getAllMateriMentor);
 
 
 

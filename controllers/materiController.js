@@ -42,6 +42,7 @@ const addMateri = async (req, res) => {
 
 
         console.log("halo", req.files);
+        console.log("halo file", req.file);
 
         // console.log(imgFile);
         console.log("hai body", req.body);

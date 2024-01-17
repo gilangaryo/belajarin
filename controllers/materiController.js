@@ -163,10 +163,17 @@ const getMateriMentor = async (req, res) => {
             materiSnapshot.forEach(function (doc2) {
                 const currentMentorData = {
                     mentor_id: mentorDoc.id,
-                    ...mentorDoc.data()
+                    location: mentorDoc.data().location,
+                    uid: mentorDoc.data().uid,
+                    nama: mentorDoc.data().nama,
+                    email: mentorDoc.data().email,
+                    desc_mentor: mentorDoc.data().desc_mentor,
+                    photoURL: mentorDoc.data().photoURL
+
                 };
 
                 const currentMaterial = {
+
                     ...doc2.data(),
                 };
 

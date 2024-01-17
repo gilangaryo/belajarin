@@ -227,6 +227,34 @@ const getCategory = async (req, res) => {
     }
 };
 
+const getCategorySubMenuAllMateri = async (req, res) => {
+    const { category, subMenu } = req.params;
+
+    try {
+        const materiSnapshot = await db
+            .collectionGroup("materi")
+            .where("category", "==", category)
+            .where("subMenu", "==", subMenu)
+            .get();
+
+        const materiData = materiSnapshot.docs.map(doc => ({
+            document_id: doc.ref.parent.parent.id,
+            materi_id: doc.id,
+            ...doc.data()
+        }));
+
+        if (materiData.length > 0) {
+            res.json({ materiData });
+        } else {
+            res.status(404).json({ error: 'Data not found' });
+        }
+    } catch (error) {
+        console.error('Error getting documents:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 
 
 
@@ -347,6 +375,8 @@ module.exports = {
     getMateribyCategory,
     getAllCat,
     getAllSubCategory,
-    getAllSubMenu
+    getAllSubMenu,
+
+    getCategorySubMenuAllMateri
 
 };

@@ -16,7 +16,7 @@ const { getAllMember, getMember, deleteMember, addMember } = require("../control
 const { getAllMentor, addMentor } = require("../controllers/mentorController");
 const { signUp, login, signUpMentor, loginMentor } = require('../controllers/authController');
 const { pay, trxNotif } = require('../controllers/paymentController');
-const { getAllcategory, getCategory, getAllCat, getAllSubCategory, getAllSubMenu, getMateribyCategory } = require('../controllers/categoryController');
+const { getAllcategory, getCategory, getAllCat, getAllSubCategory, getAllSubMenu, getMateribyCategory, getCategorySubMenuAllMateri } = require('../controllers/categoryController');
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
 const { addMateri, getMateriMentor, getAllMateriMentor } = require('../controllers/materiController');
 const { uploadss } = require('../controllers/uploadController');
@@ -67,16 +67,14 @@ router.get('/category/allSubCat', getAllSubCategory);
 router.get('/category/allSubMenu', getAllSubMenu);
 
 router.get('/:category', getCategory);
-// get all materi by category 
-router.get('/:category/:subMenu', getMateribyCategory);
 
+// get all materi by category 
+// router.get('/:category/:subMenu', getMateribyCategory);  
+router.get('/:category/:subMenu', getCategorySubMenuAllMateri);
+
+// detail kelas
 router.get('/material/:nama/:uid', getMateriMentor);
 router.get('/HomeMentor/:mentor_name/:mentor_id', getAllMateriMentor);
-
-
-
-
-// router.post('/category/:category/:subCategory', addSubcategory);
 
 // send email
 router.post('/sendemail', sendEmail);

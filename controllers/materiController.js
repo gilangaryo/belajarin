@@ -60,7 +60,10 @@ const addMateri = async (req, res) => {
                 mentor_name: mentor_name,
                 title: title,
                 learning_path: learningPath,
-                price: price
+                price: price,
+                category: selectedCategory,
+                subCategory: selectedSubCategory,
+                subMenu: selectedSubMenu
             });
 
             const mentorCollection = db.collection('mentor').doc(uid);

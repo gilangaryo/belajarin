@@ -244,8 +244,7 @@ const getAllMaterial = async (req, res) => {
         } else {
             res.status(404).json({ error: 'data tidak ditemukan bray' });
         }
-        console.log(materiData);
-        res.send(materiData);
+
     } catch (error) {
         console.error('Error getting materi documents:', error);
         res.status(500).json({ error: 'Internal Server Error' });

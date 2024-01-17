@@ -34,7 +34,9 @@ const pay = async (req, res) => {
         const price = totalAmount;
         // req body materi_id
         // DUMMY TOLONG DIGANTI
-
+        const registerDoc = await db.collection("member").doc(uid).get();
+        const email_user = registerDoc.data().email;
+        const nama = registerDoc.data().nama;
         const transaction_id = random_uid;
         console.log(price);
 
@@ -57,7 +59,8 @@ const pay = async (req, res) => {
                 "gross_amount": price,
             },
             customer_details: {
-                "first_name": "dummy nama",
+                "first_name": nama,
+                "email": email_user
             },
             item_details: {
                 "id": transaction_id,
@@ -116,6 +119,48 @@ const updateTransactionStatus = async (req, res) => {
     }
 };
 
+
+const updateMentorMember = async (transaction_id) => {
+    try {
+        const db = require("../config");
+        // tinggal ini diganti
+        console.log("transaksinya : ", transaction_id);
+        const userSnapshot = await db.collection("order").where("order_id", "==", transaction_id).get();
+
+        if (!userSnapshot.empty) {
+            const materi_id = userSnapshot.docs[0].data().materi_id;
+            const id_member = userSnapshot.docs[0].data().id_member;
+            console.log("id membernya: ", id_member);
+            const mentor_id = "hehe mentor";
+
+            const member = db.collection('member').doc(id_member);
+            const memberSub = member.collection('listClassMember').doc(materi_id);
+
+            await memberSub.set({
+                cek: "masuk kalii ?",
+                materi_id: materi_id,
+                mentor_id: mentor_id
+            });
+
+            const id_mentor = "id_mentor";
+            const mentor = db.collection('mentor').doc(id_mentor);
+            const mentorSub = mentor.collection('listClassMentor').doc(materi_id);
+
+            await mentorSub.set({
+                cek: "masuk brokuuu",
+                materi_id: materi_id,
+
+            });
+
+            console.log("Order updated successfully!");
+        } else {
+            console.log("No matching documents found for the given transaction_id.");
+        }
+    } catch (error) {
+        console.error("Error updating mentor and member:", error);
+    }
+};
+
 const updateStatusResponseMidtrans = async (transaction_id, data) => {
     try {
         const hash = crypto.createHash('sha512').update(`${transaction_id}${data.status_code}${data.gross_amount}${serverKey}`).digest('hex');
@@ -133,16 +178,19 @@ const updateStatusResponseMidtrans = async (transaction_id, data) => {
         if (transactionStatus == 'capture') {
             if (fraudStatus == 'accept') {
                 console.log(transaction_id);
-                await updateStatus(transaction_id, "PAID");
-
                 console.log("update member mentor");
+
                 // UPDATE KELAS DI MEMBER DAN MENTOR
+
+                await updateStatus(transaction_id, "PAID");
                 await updateMentorMember(transaction_id);
+
 
                 responseData = { transaction_id, status: "PAID", payment_method: data.payment_type };
             }
         } else if (transactionStatus == 'settlement') {
             await updateStatus(transaction_id, "PAID");
+            await updateMentorMember(transaction_id);
             responseData = { transaction_id, status: "PAID", payment_method: data.payment_type };
         } else if (transactionStatus == 'cancel' ||
             transactionStatus == 'deny' ||
@@ -194,43 +242,6 @@ const trxNotif = async (req, res) => {
 
 
 
-const updateMentorMember = async (req) => {
-    try {
-        const db = require("../config");
-        // tinggal ini diganti
-        const transaction_id = req.body.transaction_id;
-        const userSnapshot = await db.collection("order").where("order_id", "==", transaction_id).get();
-
-        if (!userSnapshot.empty) {
-            // const uid = userSnapshot.docs[0].data().uid;
-            const materi_id = userSnapshot.docs[0].data().materi_id;
-
-            const id_member = "id_member";
-            const member = db.collection('member').doc(id_member);
-            const memberSub = member.collection('listClass').doc(materi_id);
-
-            await memberSub.set({
-                cek: "masuk ga ?",
-                materi_id: materi_id
-            });
-
-            const id_mentor = "id_mentor";
-            const mentor = db.collection('mentor').doc(id_mentor);
-            const mentorSub = mentor.collection('listClass').doc(materi_id);
-
-            await mentorSub.set({
-                cek: "masuk ya?",
-                materi_id: materi_id
-            });
-
-            console.log("Order updated successfully!");
-        } else {
-            console.log("No matching documents found for the given transaction_id.");
-        }
-    } catch (error) {
-        console.error("Error updating mentor and member:", error);
-    }
-};
 
 
 module.exports = {

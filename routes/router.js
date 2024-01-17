@@ -129,10 +129,10 @@ const updateMentorMember22 = async (req) => {
         if (!userSnapshot.empty) {
             // const uid = userSnapshot.docs[0].data().uid;
             const materi_id = userSnapshot.docs[0].data().materi_id;
+            const id_member = userSnapshot.docs[0].data().id_member;
 
-            const id_member = "id_member";
             const member = db.collection('member').doc(id_member);
-            const memberSub = member.collection('listClass').doc(materi_id);
+            const memberSub = member.collection('listClassMember').doc(materi_id);
 
             await memberSub.set({
                 cek: "masuk ga ?",
@@ -141,7 +141,7 @@ const updateMentorMember22 = async (req) => {
 
             const id_mentor = "id_mentor";
             const mentor = db.collection('mentor').doc(id_mentor);
-            const mentorSub = mentor.collection('listClass').doc(materi_id);
+            const mentorSub = mentor.collection('listClassMentor').doc(materi_id);
 
             await mentorSub.set({
                 cek: "masuk ya?",

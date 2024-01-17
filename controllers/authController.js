@@ -2,7 +2,7 @@ const firebase = require('firebase');
 const signOut = require('firebase');
 const db = require('../config');
 const auth = require('../config');
-const { sendEmail } = require('./sendEmailController');
+const { sendEmail, sendEmailPass } = require('./sendEmailController');
 const member = db.collection('member');
 const mentor = db.collection('mentor');
 
@@ -201,22 +201,25 @@ const accMentor = async (req, res) => {
         const email = registerDoc.data().email;
         const password = "halobelajarin";
 
+
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
         const member = db.collection('member');
-
+        const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/profile%2Fprofile.png?alt=media&token=1205b9f2-ba31-4787-834d-1d47ef60b9d3";
         const uid = userCredential.user.uid;
         await member.doc(uid).set({
             uid: uid,
+            email: email,
             displayName: nama,
             photoURL: img,
-            role: "mentor",
-            ...data
+            role: "mentor"
+
         });
-        const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/profile%2Fprofile.png?alt=media&token=1205b9f2-ba31-4787-834d-1d47ef60b9d3";
+
         const mentorCollection = db.collection('mentor').doc(uid);
         const registerSubcollectionRef = mentorCollection.collection('register').doc(uid);
         await mentorCollection.set({
             uid: uid,
+            email: email,
             displayName: nama,
             photoURL: img,
             role: "mentor",
@@ -233,7 +236,7 @@ const accMentor = async (req, res) => {
         // }).catch((error) => {
         //     console.error("Error removing document: ", error);
         // });
-
+        sendEmailPass(email, nama);
         res.status(200).json({ message: 'Mentor account created successfully' });
     } catch (error) {
         // Handle different error cases

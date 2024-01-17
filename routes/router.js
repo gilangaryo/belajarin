@@ -20,6 +20,7 @@ const { getAllcategory, getCategory, getAllCat, getAllSubCategory, getAllSubMenu
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
 const { addMateri, getMateriMentor, getAllMateriMentor, getAllMaterial } = require('../controllers/materiController');
 const { uploadss } = require('../controllers/uploadController');
+const db = require('../config');
 
 
 router.use(cors());
@@ -104,6 +105,52 @@ router.post("/upload", upload.single("file"), uploadss);
 
 // ADMIN 
 router.post('/admin/register/mentor', accMentor);
+
+
+router.post('/gilangaryo', async (req, res) => {
+    try {
+        await updateMentorMember22(req);
+        res.status(200).json({ message: 'masuk updated mentor and member.' });
+    } catch (error) {
+        console.error('Error in /gilangaryo route:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+
+const updateMentorMember22 = async (req) => {
+    try {
+        const db = require("../config");
+        const transaction_id = req.body.transaction_id;
+        const userSnapshot = await db.collection("order").where("order_id", "==", transaction_id).get();
+
+        if (!userSnapshot.empty) {
+            const uid = userSnapshot.docs[0].data().uid;
+            const materi_id = userSnapshot.docs[0].data().materi_id;
+
+            const id_member = "id_member";
+            const id_mentor = "id_mentor";
+            const member = db.collection('member').doc(id_member);
+            await member.set({
+                cek: "cek aja kok",
+                materi_id: materi_id
+            });
+
+            const mentor = db.collection('mentor').doc(id_mentor);
+            await mentor.set({
+                cek: "cek aja kok",
+                materi_id: materi_id
+            });
+
+            console.log("Order updated successfully!");
+        } else {
+            console.log("No matching documents found for the given transaction_id.");
+        }
+    } catch (error) {
+        console.error("Error updating mentor and member:", error);
+    }
+};
 
 
 module.exports = router;

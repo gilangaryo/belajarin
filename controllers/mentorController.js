@@ -70,8 +70,8 @@ const addMentor = async (req, res) => {
         const portfolioFile = req.files.portfolio[0];
 
 
-        const image = req.file;
-        const member = db.collection("member");
+        // const image = req.file;
+        // const member = db.collection("member");
         const {
             nama,
             email,
@@ -110,7 +110,7 @@ const addMentor = async (req, res) => {
                 const regis_id = mentorDocRef.id;
                 console.log("idnya", regis_id);
                 uploadssss(cvFile, portfolioFile, keanggotaanFile, regis_id);
-                sendEmail(email);
+                sendEmail(email, nama);
                 res.status(201).json({ message: 'Mentor added successfully', mentorId: mentorDocRef.id });
             } else {
 
@@ -129,7 +129,7 @@ const addMentor = async (req, res) => {
                 const regis_id = mentorDocRef.id;
                 console.log("idnya", regis_id);
                 uploadssss(cvFile, portfolioFile, regis_id);
-                sendEmail(email);
+                sendEmail(email, nama);
                 console.log("community");
                 res.status(201).json({ message: 'Mentor community added successfully', mentorId: mentorCollection.doc.id });
             }

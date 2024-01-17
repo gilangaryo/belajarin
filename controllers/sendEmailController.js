@@ -12,7 +12,7 @@ admin.initializeApp({
 });
 
 
-const sendEmail = async (email, res) => {
+const sendEmail = async (email, nama, res) => {
     admin
         .firestore()
         .collection("mail")
@@ -30,8 +30,48 @@ const sendEmail = async (email, res) => {
                     </head>
                     <body>
                         <h1>Hello from Belajarin</h1>
-                        <p>HALO KAMU.</p>
-                        <code>This is a code snippet.</code>
+                        <p>Hai ${nama || 'User'}! </p>
+                        <p>Tunggu verifikasi admin ya Mentor!</p>
+                        <code>halobelajarin@gmail.com</code>
+                    </body>
+                </html>
+            `,
+            },
+        })
+        .then(() => {
+            console.log("Menunggu antrian email!");
+            // res.status(201).send('Menunggu Email!');
+
+        })
+        .catch((error) => {
+            console.error("Error sending email:", error);
+
+        });
+};
+const sendEmailPass = async (email, nama, res) => {
+    admin
+        .firestore()
+        .collection("mail")
+        .add({
+            to: email,
+            message: {
+                subject: "Status Mentor",
+                text: "Joined",
+                html: `
+                <html>
+                    <head>
+                        <style>
+                            /* Add your CSS styles here if needed */
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Hello from Belajarin</h1>
+                        <p>Hai ${nama || 'User'}! </p>
+                        <p>Selamat bergabung di belajarin!</p>
+                        <p>Gunakan email dan password berikut</p>
+                        <p>email = ${email || 'User'} </p>
+                        <p>password = "halobelajarin" </p>
+                        <code>halobelajarin@gmail.com</code>
                     </body>
                 </html>
             `,
@@ -110,5 +150,6 @@ const sendEmails = async (req, res) => {
 
 module.exports = {
     sendEmail,
-    sendEmails
+    sendEmails,
+    sendEmailPass
 };

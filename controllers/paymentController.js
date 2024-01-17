@@ -8,13 +8,15 @@ const router = express.Router();
 const crypto = require('crypto');
 const serverKey = process.env.MIDTRANS_SERVER_KEY;
 
-const addTransaction = async (transaction_id, price) => {
+const addTransaction = async (transaction_id, price, materi_id) => {
     try {
         const uid = transaction_id;
         const harga = price;
         await orderCollection.doc(uid).set({
             order_id: uid,
-            price: harga
+            price: harga,
+            materi_id: materi_id
+
         });
         console.log("order tambah!");
     } catch (error) {
@@ -25,13 +27,17 @@ const addTransaction = async (transaction_id, price) => {
 const pay = async (req, res) => {
     try {
         const uid = crypto.randomUUID();
-        const { title, price } = req.body;
-        const { selectedTime } = req.body; // Corrected variable name
 
+        const { title, totalAmount } = req.body;
+        const { selectedTime } = req.body; // Corrected variable name
+        const price = totalAmount;
+        // req body materi_id
+        // DUMMY TOLONG DIGANTI
+        const materi_id = "V5GFYzMFK6Tc7Q715OTd";
         const transaction_id = uid;
         console.log(price);
 
-        await addTransaction(transaction_id, price);
+        await addTransaction(transaction_id, price, materi_id);
 
         if (!transaction_id || !title || !price) {
             throw new Error("Invalid request. Missing required parameters.");
@@ -127,6 +133,11 @@ const updateStatusResponseMidtrans = async (transaction_id, data) => {
             if (fraudStatus == 'accept') {
                 console.log(transaction_id);
                 await updateStatus(transaction_id, "PAID");
+
+                console.log("update member mentor");
+                // UPDATE KELAS DI MEMBER DAN MENTOR
+                await updateMentorMember(transaction_id);
+
                 responseData = { transaction_id, status: "PAID", payment_method: data.payment_type };
             }
         } else if (transactionStatus == 'settlement') {
@@ -179,8 +190,36 @@ const trxNotif = async (req, res) => {
     }
 };
 
+
+
+
+const updateMentorMember = async (transaction_id) => {
+    try {
+        const userSnapshot = await db.collection("order").where("transaction_id", "==", transaction_id).get();
+
+        const materi_id = userSnapshot.data().materi_id;
+
+        const member = db.collection('member');
+        await member.doc().set({
+
+        });
+
+        const mentor = db.collection('mentor').doc(uid);
+        await mentor.set({
+            ...userSnapshot.data()
+        });
+        console.log("order tambah!");
+    } catch (error) {
+        console.error("Error writing document: ", error);
+    }
+};
+
 module.exports = {
     pay,
     updateTransactionStatus,
     trxNotif
 };
+
+
+
+

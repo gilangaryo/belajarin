@@ -68,7 +68,7 @@ const addMateri = async (req, res) => {
             });
 
             const mentorCollection = db.collection('mentor').doc(uid);
-            const materiMentor = mentorCollection.collection("materi");
+            const materiMentor = mentorCollection.collection("materi_mentor");
             const materiMentorDocRef = materiMentor.doc(subCollectionRef3.id);
             await materiMentorDocRef.set({
                 materi_id: subCollectionRef3.id,

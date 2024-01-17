@@ -2,12 +2,15 @@ const firebase = require('firebase');
 const signOut = require('firebase');
 const db = require('../config');
 const auth = require('../config');
+const { sendEmail } = require('./sendEmailController');
 const member = db.collection('member');
 const mentor = db.collection('mentor');
 
 const signUp = async (req, res) => {
     try {
-        const { nama, email, password } = req.body;
+        // const { nama, email, password } = req.body;
+
+
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
 
         const uid = userCredential.user.uid;
@@ -87,7 +90,9 @@ const login = async (req, res) => {
 const signUpMentor = async (req, res) => {
     try {
 
-        const { nama, email, password } = req.body;
+        // const { nama, email, password } = req.body;
+
+
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
 
         const uid = userCredential.user.uid;
@@ -156,10 +161,42 @@ const loginMentor = async (req, res) => {
         res.status(400).send(error.message);
     }
 };
+const accMentor = async (req, res) => {
+    try {
+        const idRegMentor = req.body.id;
+        const snapshot = await mentor.doc(idRegMentor).get();
+
+        if (!snapshot.exists) {
+            return res.status(404).json({ error: 'Mentor not found' });
+        }
+
+        const nama = snapshot.data().name;
+        const email = snapshot.data().email;
+
+        const mentorCollection = db.collection('mentor').doc(uid);
+        const materiMentor = mentorCollection.collection("materi");
+        const materiMentorDocRef = materiMentor.doc();
+        await materiMentorDocRef.set({
+            materi_id: subCollectionRef3.id,
+            title: title,
+            learningPath: learningPath,
+            price: price
+        });
+        sendEmail(email, nama);
 
 
+        res.status(200).json({ message: 'Mentor account created successfully' });
+    } catch (error) {
+        // Handle different error cases
+        console.error('Error in accMentor:', error);
 
-
+        if (error.code === 'auth/email-already-in-use') {
+            res.status(400).send('Email sudah terdaftar!');
+        } else {
+            res.status(500).send('Internal Server Error');
+        }
+    }
+};
 
 const logout = async (req, res) => {
     try {
@@ -175,4 +212,4 @@ const logout = async (req, res) => {
     }
 };
 
-module.exports = { signUp, login, signUpMentor, loginMentor };
+module.exports = { signUp, login, signUpMentor, loginMentor, accMentor };

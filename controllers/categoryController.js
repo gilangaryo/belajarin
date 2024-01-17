@@ -237,7 +237,31 @@ const getMateri = async (req, res) => {
 
         // ganti jadi postan jeki
         const subCategory = "mobile-app-development";
+        const categoryDoc2 = await db.collection("categories").doc(category).get();
 
+        if (!categoryDoc2.exists) {
+            return res.status(404).json({ error: 'Category not foundaa' });
+        }
+        const subcategoriesSnapshot2 = await categoryDoc2.ref.collection("subCategory").get();
+        const subcategories2 = [];
+
+        for (const subCategoryDoc of subcategoriesSnapshot2.docs) {
+            const subCategoryData = subCategoryDoc.data();
+
+            const subMenuSnapshot = await subCategoryDoc.ref.collection("subMenu").get();
+            const subMenu = subMenuSnapshot.docs.map(subMenuDoc => ({ uid: subMenuDoc.id, ...subMenuDoc.data() }));
+
+            const subcategoryWithSubMenu = {
+                id: subCategoryDoc.id,
+                // title: subCategoryData.title,
+                // header: subCategoryData.title,
+                ...subCategoryData,
+                subMenu: subMenu,
+            };
+
+            subcategories2.push(subcategoryWithSubMenu);
+        } subcategories2.push(subMenu);
+        console.log(subcategories2);
 
         const categoryDoc = await db.collection("categories").doc(category).get();
         if (!categoryDoc.exists) {
@@ -322,7 +346,6 @@ module.exports = {
     updatecategory,
     deletecategory,
     getMateri,
-
     getAllCat,
     getAllSubCategory,
     getAllSubMenu

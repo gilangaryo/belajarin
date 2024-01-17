@@ -48,12 +48,15 @@ router.post('/auth/login', login);
 router.get('/allMentor', getAllMentor);
 const uploads = multer({ storage: multer.memoryStorage(), limits: { fileSize: 3000000 } });
 router.post('/addMentor', uploads.fields([{ name: 'cv', maxCount: 1 }, { name: 'portfolio', maxCount: 1 }]), addMentor);
+
 router.post('/dashboard/register/mentor', signUpMentor);
 router.post('/dashboard/login/mentor', loginMentor);
 
 
+// midtrans
 router.post('/pay', pay);
 router.post('/notification', trxNotif);
+
 
 router.get('/material/:nama/:uid', getMateriMentor);
 
@@ -63,7 +66,8 @@ router.get('/category', getAllcategory);
 router.get('/category/all', getAllCat);
 router.get('/category/allSubCat', getAllSubCategory);
 router.get('/category/allSubMenu', getAllSubMenu);
-// router.get('/:category', getCategory);
+
+router.get('/:category', getCategory);
 router.get('/:category/:subMenu', getMateri);
 
 
@@ -79,7 +83,7 @@ router.post('/sendemails', sendEmails);
 
 
 // TAMBAH MATERI
-router.post('/HomeMentor/:mentor_name/:uid/addMateri', uploads.fields([{ name: 'image', maxCount: 1 }]), addMateri);
+router.post('/HomeMentor/:mentor_name/:uid/addMateri', uploads.fields([{ name: 'file', maxCount: 1 }]), addMateri);
 
 
 

@@ -235,7 +235,6 @@ const getMateri = async (req, res) => {
         const { category, subMenu } = req.params;
 
 
-        // ganti jadi postan jeki
         const subCategory = "mobile-app-development";
         const categoryDoc2 = await db.collection("categories").doc(category).get();
 

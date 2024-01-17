@@ -88,11 +88,11 @@ const addMateri = async (req, res) => {
                 const imgDownloadURL = await getDownloadURL(imgStorageRef);
 
                 await subCollectionRef3.update({
-                    img: imgDownloadURL
+                    image: imgDownloadURL
                 });
 
                 await materiMentorDocRef.update({
-                    img: imgDownloadURL
+                    image: imgDownloadURL
                 });
 
                 console.log('Files successfully uploaded. img Download URL:', imgDownloadURL);

@@ -147,7 +147,21 @@ const addMentor = async (req, res) => {
     }
 };
 
+
+const getAllDate = async (req, res) => {
+    try {
+        const jadwal = db.collection("mentor").doc("xcpPYjTRcHBFM0gOMyZj").collection("jadwal");
+        const snapshot_jadwal = await jadwal.get();
+        const list_jadwal = snapshot_jadwal.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        res.send(list_jadwal);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+
 module.exports = {
     getAllMentor,
-    addMentor
+    addMentor,
+    getAllDate
 };

@@ -8,7 +8,7 @@ const mentor = db.collection('mentor');
 
 const signUp = async (req, res) => {
     try {
-        // const { nama, email, password } = req.body;
+        const { nama, email, password } = req.body;
 
 
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);

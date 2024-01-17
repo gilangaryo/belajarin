@@ -13,7 +13,7 @@ const cors = require('cors');
 
 
 const { getAllMember, getMember, deleteMember, addMember } = require("../controllers/memberController");
-const { getAllMentor, addMentor } = require("../controllers/mentorController");
+const { getAllMentor, addMentor, getAllDate } = require("../controllers/mentorController");
 const { signUp, login, daftarMentorByAdmin, loginMentor } = require('../controllers/authController');
 const { pay, trxNotif } = require('../controllers/paymentController');
 const { getAllcategory, getCategory, getAllCat, getAllSubCategory, getAllSubMenu, getMateribyCategory, getCategorySubMenuAllMateri } = require('../controllers/categoryController');
@@ -33,6 +33,7 @@ router.use((req, res, next) => {
 
 
 router.get('/member', getAllMember);
+
 
 router.get('/member/:id', getMember);
 // router.post('/member/:id', updateMember);
@@ -54,6 +55,11 @@ router.post('/dashboard/login/mentor', loginMentor);
 // midtrans
 router.post('/pay', pay);
 router.post('/notification', trxNotif);
+
+
+
+router.get('/allDate', getAllDate);
+
 
 router.get('/', (req, res) => {
     res.json({

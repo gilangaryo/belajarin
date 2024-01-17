@@ -87,11 +87,22 @@ const login = async (req, res) => {
 
 
 
-const signUpMentor = async (req, res) => {
+const daftarMentorByAdmin = async (req, res) => {
     try {
 
-        // const { nama, email, password } = req.body;
+        const { nama, email, password, id } = req.body;
+        const registerDoc = await db.collection("register").doc(id).get();
 
+        if (registerDoc.exists) {
+            const registerData = {
+                id: registerDoc.id,
+                ...registerDoc.data()
+            };
+            console.log(registerData);
+            res.json({ registerData });
+        } else {
+            res.status(404).json({ error: 'Register data not found' });
+        }
 
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
 
@@ -212,4 +223,4 @@ const logout = async (req, res) => {
     }
 };
 
-module.exports = { signUp, login, signUpMentor, loginMentor, accMentor };
+module.exports = { signUp, login, daftarMentorByAdmin, loginMentor, accMentor };

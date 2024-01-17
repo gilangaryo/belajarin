@@ -14,7 +14,7 @@ const cors = require('cors');
 
 const { getAllMember, getMember, deleteMember, addMember } = require("../controllers/memberController");
 const { getAllMentor, addMentor } = require("../controllers/mentorController");
-const { signUp, login, signUpMentor, loginMentor } = require('../controllers/authController');
+const { signUp, login, daftarMentorByAdmin, loginMentor } = require('../controllers/authController');
 const { pay, trxNotif } = require('../controllers/paymentController');
 const { getAllcategory, getCategory, getAllCat, getAllSubCategory, getAllSubMenu, getMateribyCategory, getCategorySubMenuAllMateri } = require('../controllers/categoryController');
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
@@ -31,8 +31,6 @@ router.use((req, res, next) => {
     next();
 });
 
-// ... rest of your server setup
-
 
 router.get('/member', getAllMember);
 
@@ -47,9 +45,9 @@ router.post('/auth/login', login);
 // MENTOR
 router.get('/allMentor', getAllMentor);
 const uploads = multer({ storage: multer.memoryStorage(), limits: { fileSize: 3000000 } });
-router.post('/addMentor', uploads.fields([{ name: 'cv', maxCount: 1 }, { name: 'portfolio', maxCount: 1 }]), addMentor);
+router.post('/addMentor', uploads.fields([{ name: 'cv', maxCount: 1 }, { name: 'portfolio', maxCount: 1 }, { name: 'keanggotaan', maxCount: 1 }]), addMentor);
 
-router.post('/dashboard/register/mentor', signUpMentor);
+
 router.post('/dashboard/login/mentor', loginMentor);
 
 
@@ -57,6 +55,11 @@ router.post('/dashboard/login/mentor', loginMentor);
 router.post('/pay', pay);
 router.post('/notification', trxNotif);
 
+router.get('/', (req, res) => {
+    res.json({
+        'haii': 'SELAMAT MALAM !!'
+    });
+});
 
 
 
@@ -86,40 +89,14 @@ router.post('/sendemails', sendEmails);
 router.post('/HomeMentor/:mentor_name/:uid/addMateri', uploads.fields([{ name: 'file', maxCount: 1 }]), addMateri);
 
 
-
-router.get('/', (req, res) => {
-    res.json({
-        'haii': 'SELAMAT MALAM !!'
-    });
-});
-
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1000000 } });
 router.post("/upload", upload.single("file"), uploadss);
 
 
 
 
+// ADMIN 
+router.post('/admin/register/mentor', daftarMentorByAdmin);
 
-
-// const { database, writeUserData } = require('../configReal');
-// router.post('/adduser', (req, res) => {
-//     const { userId, name, email, imageUrl } = req.body;
-
-//     // Call the writeUserData function defined in database.js
-//     writeUserData(userId, name, email, imageUrl);
-
-//     res.status(200).json({ message: 'User data added successfully' });
-// });
-
-// router.get('/getuserdata/:userId', (req, res) => {
-//     const userId = req.params.userId;
-
-//     // Read data from the database
-//     const userRef = database.ref('users/' + userId);
-//     userRef.once('value', (snapshot) => {
-//         const userData = snapshot.val();
-//         res.status(200).json(userData);
-//     });
-// });
 
 module.exports = router;

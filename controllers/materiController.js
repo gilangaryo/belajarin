@@ -118,31 +118,31 @@ const addMateri = async (req, res) => {
 };
 
 
-const getMateriMentorsatu = async (req, res) => {
-    const { uid } = req.params;
+// const getMateriMentorsatu = async (req, res) => {
+//     const { uid } = req.params;
 
-    var mentor_id = "rGpTUQAnWAW0pTWJavBwY3gDtwQ2";
-    try {
-        const mentorRef = db.collection('mentor');
-        console.log(uid);
-        const materiQuery = await mentorRef.collection('materi').doc(uid).get();
+//     var mentor_id = "rGpTUQAnWAW0pTWJavBwY3gDtwQ2";
+//     try {
+//         const mentorRef = db.collection('mentor');
+//         console.log(uid);
+//         const materiQuery = await mentorRef.collection('materi').doc(uid).get();
 
-        if (!materiQuery.empty) {
-            const materiData = materiQuery.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
+//         if (!materiQuery.empty) {
+//             const materiData = materiQuery.docs.map(doc => ({
+//                 id: doc.id,
+//                 ...doc.data()
+//             }));
 
-            res.json({ materiData });
-        } else {
-            res.status(404).json({ error: 'Materi not found' });
-        }
-    } catch (error) {
-        console.error('Error fetching materi:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+//             res.json({ materiData });
+//         } else {
+//             res.status(404).json({ error: 'Materi not found' });
+//         }
+//     } catch (error) {
+//         console.error('Error fetching materi:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
 
-};
+// };
 
 
 // get satu materi per mentor di details materi

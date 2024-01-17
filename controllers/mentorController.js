@@ -18,7 +18,7 @@ const getAllMentor = async (req, res) => {
 
 require('dotenv').config();
 
-const uploadssss = async (cvFile, portfolioFile, regis_id, res) => {
+const uploadssss = async (cvFile, portfolioFile, keanggotaanFile, regis_id, res) => {
     try {
         const { appku } = require("../config");
         const storageGet = getStorage(appku);
@@ -35,13 +35,22 @@ const uploadssss = async (cvFile, portfolioFile, regis_id, res) => {
         await uploadBytes(portfolioStorageRef, portfolioFile.buffer, { contentType: portfolioFile.mimetype });
         const portfolioDownloadURL = await getDownloadURL(portfolioStorageRef);
 
+        // Handle the portfolio file
+        const keanggotaanFilename = `portfolio/${keanggotaanFile.originalname}`;
+        const keanggotaanStorageRef = ref(storageGet, keanggotaanFilename);
+        await uploadBytes(keanggotaanStorageRef, keanggotaanFile.buffer, { contentType: keanggotaanFile.mimetype });
+        const keanggotaanDownloadURL = await getDownloadURL(keanggotaanStorageRef);
+
         // Update the document in Firestore with download URLs
         await mentorCollection.doc(regis_id).update({
             cv: cvDownloadURL,
-            portfolio: portfolioDownloadURL
+            portfolio: portfolioDownloadURL,
+            keanggotaan: keanggotaanDownloadURL
         });
 
-        console.log('Files successfully uploaded. CV Download URL:', cvDownloadURL, 'Portfolio Download URL:', portfolioDownloadURL);
+        console.log('Files successfully uploaded. CV Download URL:', cvDownloadURL);
+        console.log('Files successfully uploaded. Portfolio Download URL:', portfolioDownloadURL);
+        console.log('Files successfully uploaded. keanggotaan URL:');
     } catch (error) {
         console.error('Error uploading files', error);
         res.status(400).send(error.message);
@@ -56,6 +65,7 @@ const addMentor = async (req, res) => {
         const cvFile = req.files.cv[0];
         const portfolioFile = req.files.portfolio[0];
 
+
         const image = req.file;
         const member = db.collection("member");
         const {
@@ -64,16 +74,13 @@ const addMentor = async (req, res) => {
             residenceAddress,
             educationalBackground,
             communityName,
-            communityAccountSign,
-            // cv,
-            // portfolio,
             bankAccountName,
             bankAccountNumber,
             bank,
         } = req.body;
 
         if (name) {
-            if (communityName && communityAccountSign) {
+            if (communityName) {
                 // const subCollectionRef3 = subCollectionRef2.collection("materi").doc();
                 // await subCollectionRef3.set({
                 //     materi_id: subCollectionRef3.id,
@@ -81,7 +88,7 @@ const addMentor = async (req, res) => {
                 //     description: description,
                 //     image: img
                 // });
-
+                const keanggotaanFile = req.files.keanggotaan[0];
                 const mentorDocRef = mentorCollection.doc();
                 await mentorDocRef.set({
                     reg_id: mentorDocRef.id,
@@ -99,7 +106,7 @@ const addMentor = async (req, res) => {
                 });
                 const regis_id = mentorDocRef.id;
                 console.log("idnya", regis_id);
-                uploadssss(cvFile, portfolioFile, regis_id);
+                uploadssss(cvFile, portfolioFile, keanggotaanFile, regis_id);
                 sendEmail(email, name);
                 res.status(201).json({ message: 'Mentor added successfully', mentorId: mentorDocRef.id });
             } else {

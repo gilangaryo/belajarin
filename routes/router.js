@@ -18,7 +18,7 @@ const { signUp, login, daftarMentorByAdmin, loginMentor } = require('../controll
 const { pay, trxNotif } = require('../controllers/paymentController');
 const { getAllcategory, getCategory, getAllCat, getAllSubCategory, getAllSubMenu, getMateribyCategory, getCategorySubMenuAllMateri } = require('../controllers/categoryController');
 const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
-const { addMateri, getMateriMentor, getAllMateriMentor } = require('../controllers/materiController');
+const { addMateri, getMateriMentor, getAllMateriMentor, getAllMaterial } = require('../controllers/materiController');
 const { uploadss } = require('../controllers/uploadController');
 
 
@@ -58,14 +58,14 @@ router.post('/notification', trxNotif);
 
 
 
-router.get('/allDate', getAllDate);
 
 
-router.get('/', (req, res) => {
-    res.json({
-        'haii': 'SELAMAT MALAM !!'
-    });
-});
+router.get('/', getAllMaterial);
+// router.get('/', (req, res) => {
+//     res.json({
+//         'haii': 'SELAMAT MALAM !!'
+//     });
+// });
 
 
 
@@ -99,6 +99,7 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 100
 router.post("/upload", upload.single("file"), uploadss);
 
 
+// router.get('/allDate', getAllDate);
 
 
 // ADMIN 

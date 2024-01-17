@@ -202,7 +202,7 @@ const getAllMateriMentor = async (req, res) => {
     const { mentor_id } = req.params;
 
     try {
-        const materiSnapshot = await db.collection("mentor").doc(mentor_id).collection("materi_mentor").get();
+        const materiSnapshot = await db.collection("materi_mentor").doc(mentor_id).collection("materi_mentor").get();
 
         const materiData = materiSnapshot.docs.map(doc => ({
             id: doc.id,
@@ -223,9 +223,39 @@ const getAllMateriMentor = async (req, res) => {
 
 
 
+
+
+
+
+const getAllMaterial = async (req, res) => {
+    try {
+        const materiSnapshot = await db.collectionGroup('materi').get();
+
+        const materiData = materiSnapshot.docs.map(doc => ({
+            // category_id: doc.ref.parent.parent.parent.id,
+            // subcategory_id: doc.ref.parent.parent.id,
+            // submenu_id: doc.ref.parent.id,
+            // document_id: doc.ref.id,
+            ...doc.data()
+        }));
+
+        if (materiData.length > 0) {
+            res.json({ materiData });
+        } else {
+            res.status(404).json({ error: 'data tidak ditemukan bray' });
+        }
+        console.log(materiData);
+        res.send(materiData);
+    } catch (error) {
+        console.error('Error getting materi documents:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     addMateri,
     getMateriMentor,
-    getAllMateriMentor
+    getAllMateriMentor,
+    getAllMaterial
 
 };

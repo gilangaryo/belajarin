@@ -193,6 +193,14 @@ const accMentor = async (req, res) => {
 
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
 
+        const member = db.collection('member');
+        await member.doc(id).set({
+            uid: id,
+            displayName: nama,
+            photoURL: img,
+            role: "mentor",
+            ...data
+        });
         const uid = userCredential.user.uid;
         const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/profile%2Fprofile.png?alt=media&token=1205b9f2-ba31-4787-834d-1d47ef60b9d3";
         const mentorCollection = db.collection('mentor').doc(id);

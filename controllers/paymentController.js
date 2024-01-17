@@ -8,14 +8,15 @@ const router = express.Router();
 const crypto = require('crypto');
 const serverKey = process.env.MIDTRANS_SERVER_KEY;
 
-const addTransaction = async (transaction_id, price, materi_id) => {
+const addTransaction = async (transaction_id, price, materi_id, uid) => {
     try {
-        const uid = transaction_id;
+        const transaction_uid = transaction_id;
         const harga = price;
-        await orderCollection.doc(uid).set({
-            order_id: uid,
+        await orderCollection.doc(transaction_uid).set({
+            order_id: transaction_uid,
             price: harga,
-            materi_id: materi_id
+            materi_id: materi_id,
+            id_member: uid
 
         });
         console.log("order tambah!");
@@ -26,18 +27,18 @@ const addTransaction = async (transaction_id, price, materi_id) => {
 
 const pay = async (req, res) => {
     try {
-        const uid = crypto.randomUUID();
+        const random_uid = crypto.randomUUID();
 
-        const { title, totalAmount, materi_id } = req.body;
+        const { title, totalAmount, materi_id, uid } = req.body;
         const { selectedTime } = req.body;
         const price = totalAmount;
         // req body materi_id
         // DUMMY TOLONG DIGANTI
 
-        const transaction_id = uid;
+        const transaction_id = random_uid;
         console.log(price);
 
-        await addTransaction(transaction_id, price, materi_id);
+        await addTransaction(transaction_id, price, materi_id, uid);
 
         if (!transaction_id || !title || !price) {
             throw new Error("Invalid request. Missing required parameters.");
@@ -193,26 +194,44 @@ const trxNotif = async (req, res) => {
 
 
 
-const updateMentorMember = async (transaction_id) => {
+const updateMentorMember = async (req) => {
     try {
-        const userSnapshot = await db.collection("order").where("transaction_id", "==", transaction_id).get();
+        const db = require("../config");
+        // tinggal ini diganti
+        const transaction_id = req.body.transaction_id;
+        const userSnapshot = await db.collection("order").where("order_id", "==", transaction_id).get();
 
-        const materi_id = userSnapshot.data().materi_id;
+        if (!userSnapshot.empty) {
+            // const uid = userSnapshot.docs[0].data().uid;
+            const materi_id = userSnapshot.docs[0].data().materi_id;
 
-        const member = db.collection('member');
-        await member.doc().set({
+            const id_member = "id_member";
+            const member = db.collection('member').doc(id_member);
+            const memberSub = member.collection('listClass').doc(materi_id);
 
-        });
+            await memberSub.set({
+                cek: "masuk ga ?",
+                materi_id: materi_id
+            });
 
-        const mentor = db.collection('mentor').doc(uid);
-        await mentor.set({
-            ...userSnapshot.data()
-        });
-        console.log("order tambah!");
+            const id_mentor = "id_mentor";
+            const mentor = db.collection('mentor').doc(id_mentor);
+            const mentorSub = mentor.collection('listClass').doc(materi_id);
+
+            await mentorSub.set({
+                cek: "masuk ya?",
+                materi_id: materi_id
+            });
+
+            console.log("Order updated successfully!");
+        } else {
+            console.log("No matching documents found for the given transaction_id.");
+        }
     } catch (error) {
-        console.error("Error writing document: ", error);
+        console.error("Error updating mentor and member:", error);
     }
 };
+
 
 module.exports = {
     pay,

@@ -76,7 +76,7 @@ router.get('/:category', getCategory);
 router.get('/:category/:subMenu', getCategorySubMenuAllMateri);
 
 // detail kelas
-router.get('/material/:nama/:uid', getMateriMentor);
+router.get('/material/:nama/:materi_id', getMateriMentor);
 router.get('/HomeMentor/:mentor_name/:mentor_id', getAllMateriMentor);
 
 // send email

@@ -72,9 +72,13 @@ const addMateri = async (req, res) => {
             const materiMentorDocRef = materiMentor.doc(subCollectionRef3.id);
             await materiMentorDocRef.set({
                 materi_id: subCollectionRef3.id,
+                mentor_id: uid,
                 title: title,
                 learningPath: learningPath,
-                price: price
+                price: price,
+                category: selectedCategory,
+                subCategory: selectedSubCategory,
+                subMenu: selectedSubMenu
             });
             console.log("hai berhasil masuk mentor : ", req.files.file[0]);
             // console.log("hai berhasil masuk mentor : ", req.files.file[0]);
@@ -148,26 +152,27 @@ const addMateri = async (req, res) => {
 
 // get satu materi per mentor di details materi
 const getMateriMentor = async (req, res) => {
-    const { uid } = req.params;
+    const { materi_id } = req.params;
 
     try {
         const mentorSnapshot = await db.collection("mentor").get();
 
-        const material = [];
+        const materiData = [];
+        const mentorData = [];
 
         for (const mentorDoc of mentorSnapshot.docs) {
-            const materiSnapshot = await mentorDoc.ref.collection("materi").where("materi_id", "==", uid).get();
+            const materiSnapshot = await mentorDoc.ref.collection("materi").where("materi_id", "==", materi_id).get();
 
             materiSnapshot.forEach(function (doc2) {
-                material.push({
+                materiData.push({
 
                     ...doc2.data()
                 });
             });
         }
 
-        if (material.length > 0) {
-            res.json({ material });
+        if (materiData.length > 0) {
+            res.json({ materiData });
         } else {
             res.status(404).json({ error: 'Data not found' });
         }
@@ -186,13 +191,13 @@ const getAllMateriMentor = async (req, res) => {
     try {
         const materiSnapshot = await db.collection("mentor").doc(mentor_id).collection("materi").get();
 
-        const material = materiSnapshot.docs.map(doc => ({
+        const materiData = materiSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         }));
 
-        if (material.length > 0) {
-            res.json({ material });
+        if (materiData.length > 0) {
+            res.json({ materiData });
         } else {
             res.status(404).json({ error: 'Data not found' });
         }

@@ -117,23 +117,45 @@ const addMateri = async (req, res) => {
 
 const getMateriMentor = async (req, res) => {
     const { uid } = req.params;
-    console.log(uid);
-    const mentorRef = doc(db, "mentor", uid);
-    const materiCollectionRef = collection(mentorRef, "materi");
+
     try {
-        const querySnapshot = await getDocs(materiCollectionRef);
+        const querySnapshot = await db.collectionGroup('materi').where('uid', '==', uid).get();
+        console.log(uid);
+        if (!querySnapshot.empty) {
+            const materiData = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
 
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
-        });
+            // Check if materiData contains mentor_id
+            if (materiData.length > 0 && materiData[0].mentor_id) {
+                const queryMentor = await db.collection('mentor').where('uid', '==', materiData[0].mentor_id).get();
 
-        // Handle the materi data as needed
+                if (!queryMentor.empty) {
+                    const mentorData = queryMentor.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+
+                    // Return both materiData and mentorData
+                    res.json({ materiData, mentorData });
+                } else {
+                    // If no mentor documents are found, return a 404 status
+                    res.status(404).json({ error: 'Mentor not found' });
+                }
+            } else {
+                // If no mentor_id is found in materiData, return a 404 status
+                res.status(404).json({ error: 'Mentor_id not found in Materi data' });
+            }
+        } else {
+            // If no documents are found, return a 404 status
+            res.status(404).json({ error: 'Materi not found' });
+        }
     } catch (error) {
-        console.error('Error fetching mentor and materi:', error);
-        // Handle the error appropriately
+        // Handle errors
+        console.error('Error fetching materi:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-
 
 };
 

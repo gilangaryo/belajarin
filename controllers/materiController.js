@@ -162,7 +162,7 @@ const getMateriMentor = async (req, res) => {
         const mentorData = [];
 
         for (const mentorDoc of mentorSnapshot.docs) {
-            const materiSnapshot = await mentorDoc.ref.collection("materi").where("materi_id", "==", materi_id).get();
+            const materiSnapshot = await mentorDoc.ref.collection("materi_mentor").where("materi_id", "==", materi_id).get();
 
             materiSnapshot.forEach(function (doc2) {
                 material.push({

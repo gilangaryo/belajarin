@@ -28,12 +28,12 @@ const pay = async (req, res) => {
     try {
         const uid = crypto.randomUUID();
 
-        const { title, totalAmount } = req.body;
-        const { selectedTime } = req.body; // Corrected variable name
+        const { title, totalAmount, materi_id } = req.body;
+        const { selectedTime } = req.body;
         const price = totalAmount;
         // req body materi_id
         // DUMMY TOLONG DIGANTI
-        const materi_id = "V5GFYzMFK6Tc7Q715OTd";
+
         const transaction_id = uid;
         console.log(price);
 

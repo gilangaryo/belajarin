@@ -126,20 +126,24 @@ const updateMentorMember22 = async (req) => {
         const userSnapshot = await db.collection("order").where("order_id", "==", transaction_id).get();
 
         if (!userSnapshot.empty) {
-            const uid = userSnapshot.docs[0].data().uid;
+            // const uid = userSnapshot.docs[0].data().uid;
             const materi_id = userSnapshot.docs[0].data().materi_id;
 
             const id_member = "id_member";
-            const id_mentor = "id_mentor";
             const member = db.collection('member').doc(id_member);
-            await member.set({
-                cek: "cek aja kok",
+            const memberSub = member.collection('listClass').doc(materi_id);
+
+            await memberSub.set({
+                cek: "masuk ga ?",
                 materi_id: materi_id
             });
 
+            const id_mentor = "id_mentor";
             const mentor = db.collection('mentor').doc(id_mentor);
-            await mentor.set({
-                cek: "cek aja kok",
+            const mentorSub = mentor.collection('listClass').doc(materi_id);
+
+            await mentorSub.set({
+                cek: "masuk ya?",
                 materi_id: materi_id
             });
 

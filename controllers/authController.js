@@ -90,43 +90,41 @@ const login = async (req, res) => {
 
 const loginMentor = async (req, res) => {
     try {
-
         if (!req.body) {
             res.send("halo jek");
-        };
+        }
+
         const { email, password } = req.body;
         const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-        const userCred = userCredential.user;
-        const user = await firebase.auth().currentUser;
+        const user = userCredential.user;
+        // Get the user data from the mentor collection
+        const registerDoc = await db.collection("mentor").doc(user.uid).get();
 
+        // Check if the email from the mentor collection matches the signed-in user's email
+        if (registerDoc.data().email === email) {
+            // Get the ID token for further authentication
+            const idToken = await user.getIdToken(true);
 
-        if (user) {
-            user.getIdToken(true)
-                .then((idToken) => {
-                    res.send({
-                        uid: userCred.uid,
-                        user: userCred.displayName,
-                        email: userCred.email,
-                        img: userCred.photoURL,
-                        msg: "Mentor Logged in",
-                        accessToken: idToken
-                    });
-
-                })
-                .catch((error) => {
-                    res.status(500).send({
-                        error: error.message
-                    });
-                });
+            res.send({
+                uid: user.uid,
+                user: user.displayName,
+                email: user.email,
+                img: user.photoURL,
+                msg: "Mentor Logged in",
+                accessToken: idToken
+            });
         } else {
+            // If the emails don't match, return an unauthorized status
             res.status(401).send({
                 error: 'User not authenticated'
             });
         }
-
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(400).send({
+            error: 'Bukan mentor!'
+        });
     }
+
 };
 
 
@@ -177,10 +175,21 @@ const daftarMentorByAdmin = async (req, res) => {
     }
 };
 
+
+
+
+
+
+
+
+
+
+
 const accMentor = async (req, res) => {
     try {
         console.log(req.body);
         const { id } = req.body;
+
         const registerDoc = await db.collection("register").doc(id).get();
 
         console.log(registerDoc.data());
@@ -190,23 +199,24 @@ const accMentor = async (req, res) => {
 
         const nama = registerDoc.data().name;
         const email = registerDoc.data().email;
+        const password = "halobelajarin";
 
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-
         const member = db.collection('member');
-        await member.doc(id).set({
-            uid: id,
+
+        const uid = userCredential.user.uid;
+        await member.doc(uid).set({
+            uid: uid,
             displayName: nama,
             photoURL: img,
             role: "mentor",
             ...data
         });
-        const uid = userCredential.user.uid;
         const img = "https://firebasestorage.googleapis.com/v0/b/belajarin-ac6fd.appspot.com/o/profile%2Fprofile.png?alt=media&token=1205b9f2-ba31-4787-834d-1d47ef60b9d3";
-        const mentorCollection = db.collection('mentor').doc(id);
-        const registerSubcollectionRef = mentorCollection.collection('register').doc(id);
+        const mentorCollection = db.collection('mentor').doc(uid);
+        const registerSubcollectionRef = mentorCollection.collection('register').doc(uid);
         await mentorCollection.set({
-            uid: id,
+            uid: uid,
             displayName: nama,
             photoURL: img,
             role: "mentor",

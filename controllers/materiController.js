@@ -148,13 +148,9 @@ const addMateri = async (req, res) => {
 //     }
 
 // };
-
-
-// get satu materi per mentor di details materi
 const getMateriMentor = async (req, res) => {
-    const { nama, materi_id } = req.params;
+    const { materi_id } = req.params;
 
-    console.log(materi_id);
     try {
         const mentorSnapshot = await db.collection("mentor").get();
 
@@ -165,23 +161,32 @@ const getMateriMentor = async (req, res) => {
             const materiSnapshot = await mentorDoc.ref.collection("materi_mentor").where("materi_id", "==", materi_id).get();
 
             materiSnapshot.forEach(function (doc2) {
-                material.push({
+                const currentMentorData = {
+                    mentor_id: mentorDoc.id,
+                    ...mentorDoc.data()
+                };
 
-                    ...doc2.data()
-                });
+                const currentMaterial = {
+                    ...doc2.data(),
+                };
+
+                mentorData.push(currentMentorData);
+                material.push(currentMaterial);
             });
         }
 
         if (material.length > 0) {
-            res.json({ material });
+            res.json({ material, mentorData });
         } else {
-            res.status(404).json({ error: 'data tidak ditemukan ya' });
+            res.status(404).json({ error: 'Data not found' });
         }
     } catch (error) {
         console.error('Error getting documents:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
 
 
 

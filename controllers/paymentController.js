@@ -126,23 +126,19 @@ const updateStatusResponseMidtrans = async (transaction_id, data) => {
         if (transactionStatus == 'capture') {
             if (fraudStatus == 'accept') {
                 console.log(transaction_id);
-                const status = "PAID";
-                await updateStatus(transaction_id, status);
+                await updateStatus(transaction_id, "PAID");
                 responseData = { transaction_id, status: "PAID", payment_method: data.payment_type };
             }
         } else if (transactionStatus == 'settlement') {
-            const status = "PAID";
-            await updateStatus(transaction_id, status);
+            await updateStatus(transaction_id, "PAID");
             responseData = { transaction_id, status: "PAID", payment_method: data.payment_type };
         } else if (transactionStatus == 'cancel' ||
             transactionStatus == 'deny' ||
             transactionStatus == 'expire') {
-            const status = "CANCELLED";
-            await updateStatus(transaction_id, status);
+            await updateStatus(transaction_id, "CANCELLED");
             responseData = { transaction_id, status: "CANCELLED" };
         } else if (transactionStatus == 'pending') {
-            const status = "CANCELLED";
-            await updateStatus(transaction_id, status);
+            await updateStatus(transaction_id, "PENDING_PAYMENT");
             responseData = { transaction_id, status: "PENDING_PAYMENT" };
         }
 

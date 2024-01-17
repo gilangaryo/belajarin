@@ -210,7 +210,7 @@ const getAllMateriMentor = async (req, res) => {
     const { mentor_id } = req.params;
 
     try {
-        const materiSnapshot = await db.collection("materi_mentor").doc(mentor_id).collection("materi_mentor").get();
+        const materiSnapshot = await db.collection("mentor").doc(mentor_id).collection("materi_mentor").get();
 
         const materiData = materiSnapshot.docs.map(doc => ({
             id: doc.id,

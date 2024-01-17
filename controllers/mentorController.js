@@ -96,7 +96,6 @@ const addMentor = async (req, res) => {
                     email: email,
                     address: residenceAddress,
                     communityName: communityName,
-                    communityAccountSign: communityAccountSign,
                     education: educationalBackground,
                     bankAccountName: bankAccountName,
                     bankAccountNumber: bankAccountNumber,

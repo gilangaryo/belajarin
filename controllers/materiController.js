@@ -152,29 +152,30 @@ const addMateri = async (req, res) => {
 
 // get satu materi per mentor di details materi
 const getMateriMentor = async (req, res) => {
-    const { materi_id } = req.params;
+    const { nama, materi_id } = req.params;
 
+    console.log(materi_id);
     try {
         const mentorSnapshot = await db.collection("mentor").get();
 
-        const materiData = [];
+        const material = [];
         const mentorData = [];
 
         for (const mentorDoc of mentorSnapshot.docs) {
             const materiSnapshot = await mentorDoc.ref.collection("materi").where("materi_id", "==", materi_id).get();
 
             materiSnapshot.forEach(function (doc2) {
-                materiData.push({
+                material.push({
 
                     ...doc2.data()
                 });
             });
         }
 
-        if (materiData.length > 0) {
-            res.json({ materiData });
+        if (material.length > 0) {
+            res.json({ material });
         } else {
-            res.status(404).json({ error: 'Data not found' });
+            res.status(404).json({ error: 'Data not founds' });
         }
     } catch (error) {
         console.error('Error getting documents:', error);

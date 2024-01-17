@@ -60,7 +60,7 @@ router.post('/notification', trxNotif);
 
 
 
-// router.get('/', getAllMaterial);
+router.get('/home', getAllMaterial);
 router.get('/', (req, res) => {
     res.json({
         'haii': 'SELAMAT MALAM !!'

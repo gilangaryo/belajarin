@@ -9,10 +9,7 @@ const mentor = db.collection('mentor');
 const signUp = async (req, res) => {
     try {
         const { nama, email, password } = req.body;
-
-
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-
         const uid = userCredential.user.uid;
         // const userCred = userCredential.user;
         const data = req.body;
@@ -112,6 +109,7 @@ const loginMentor = async (req, res) => {
                 img: user.photoURL,
                 msg: "Mentor Logged in",
                 accessToken: idToken
+
             });
         } else {
             // If the emails don't match, return an unauthorized status
@@ -222,6 +220,7 @@ const accMentor = async (req, res) => {
 
         });
 
+
         const mentorCollection = db.collection('mentor').doc(uid);
         const registerSubcollectionRef = mentorCollection.collection('register').doc(uid);
         await mentorCollection.set({
@@ -244,7 +243,9 @@ const accMentor = async (req, res) => {
         //     console.error("Error removing document: ", error);
         // });
         sendEmailPass(email, nama);
-        res.status(200).json({ message: 'Mentor account created successfully' });
+        const updatedUser = firebase.auth().currentUser;
+        res.send(updatedUser);
+        // res.status(200).json({ message: 'Mentor account created successfully' });
     } catch (error) {
         // Handle different error cases
         console.error('Error in accMentor:', error);

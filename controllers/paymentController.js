@@ -132,9 +132,9 @@ const updateMentorMember = async (transaction_id) => {
             const id_member = userSnapshot.docs[0].data().id_member;
             console.log("id membernya: ", id_member);
             const mentor_id = "hehe mentor";
-
+            const id_materi_order = crypto.randomUUID();
             const member = db.collection('member').doc(id_member);
-            const memberSub = member.collection('listClassMember').doc(materi_id);
+            const memberSub = member.collection('listClassMember').doc(id_materi_order);
 
             await memberSub.set({
                 cek: "masuk kalii ?",
@@ -144,7 +144,7 @@ const updateMentorMember = async (transaction_id) => {
 
             const id_mentor = "id_mentor";
             const mentor = db.collection('mentor').doc(id_mentor);
-            const mentorSub = mentor.collection('listClassMentor').doc(materi_id);
+            const mentorSub = mentor.collection('listClassMentor').doc(id_materi_order);
 
             await mentorSub.set({
                 cek: "masuk brokuuu",

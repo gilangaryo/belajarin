@@ -12,7 +12,7 @@ const serverless = require('serverless-http');
 const cors = require('cors');
 
 
-const { getAllMember, getMember, deleteMember, addMember } = require("../controllers/memberController");
+const { getAllMember, getMember, deleteMember, addMember, getAllClassMember } = require("../controllers/memberController");
 const { getAllMentor, addMentor, getAllDate } = require("../controllers/mentorController");
 const { signUp, login, daftarMentorByAdmin, loginMentor, accMentor } = require('../controllers/authController');
 const { pay, trxNotif } = require('../controllers/paymentController');
@@ -35,6 +35,7 @@ router.use((req, res, next) => {
 
 
 router.get('/member', getAllMember);
+router.get('/member/class/:uid', getAllClassMember);
 
 
 router.get('/member/:id', getMember);
@@ -131,8 +132,6 @@ const updateMentorMember22 = async (req, res) => {
         // Create a JavaScript Date object representing the current date and time
         const currentDate = new Date();
 
-        // Convert the JavaScript Date object to a Firestore Timestamp
-        // const timestamp = Timestamp.fromDate(currentDate);
 
         console.log(currentDate);
         if (!currentDate) {
@@ -149,6 +148,37 @@ const updateMentorMember22 = async (req, res) => {
         console.error("Error updating mentor and member:", error);
     }
 };
+const createAppointments = async (req) => {
+    const selectedDate = "2024-01-18T17:00:00.000Z";
 
+    // Assuming you have the selected time object
+    const selectedTime = {
+        startTime: '05:00',
+        endTime: '06:00',
+        value: '05:00',
+        label: '05:00 - 06:00'
+    };
+
+    // Combine date and time for start and end
+    const startDateTimeString = `${selectedDate.slice(0, 10)} ${selectedTime.startTime}`;
+    const endDateTimeString = `${selectedDate.slice(0, 10)} ${selectedTime.endTime}`;
+
+    // Create Date objects
+    const startDate = new Date(selectedDate);
+    const startTime = new Date(startDateTimeString);
+    const endTime = new Date(endDateTimeString);
+
+    if (!isNaN(startDate) && !isNaN(startTime) && !isNaN(endTime)) {
+        const appointments = [];
+        console.log(startDate);
+        console.log(startTime);
+        console.log(endTime);
+
+        // Add logic for creating appointments as needed
+    } else {
+        console.error("Invalid date or time format");
+    }
+}
+router.post('/jadwalbroku', createAppointments);
 
 module.exports = router;

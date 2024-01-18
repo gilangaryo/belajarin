@@ -131,16 +131,16 @@ const updateMentorMember = async (transaction_id) => {
         if (!userSnapshot.empty) {
             const materi_id = userSnapshot.docs[0].data().materi_id;
             const id_member = userSnapshot.docs[0].data().id_member;
+            const harga = userSnapshot.docs[0].data().price;
             console.log("id membernya: ", id_member);
-            const mentor_id = "hehe mentor";
             const id_materi_order = crypto.randomUUID();
             const member = db.collection('member').doc(id_member);
             const memberSub = member.collection('listClassMember').doc(id_materi_order);
 
             await memberSub.set({
-                cek: "masuk kalii ?",
+                price: harga,
                 materi_id: materi_id,
-                mentor_id: mentor_id
+                status: "PAID"
             });
 
             const id_mentor = "id_mentor";

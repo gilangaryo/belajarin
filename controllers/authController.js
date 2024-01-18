@@ -157,6 +157,7 @@ const daftarMentorByAdmin = async (req, res) => {
         });
         await mentor.doc(uid).set({
             uid: uid,
+            mentor_id: uid,
             displayName: nama,
             photoURL: img,
             role: "mentor",
@@ -214,6 +215,7 @@ const accMentor = async (req, res) => {
         await member.doc(uid).set({
             uid: uid,
             email: email,
+            mentor_id: uid,
             displayName: nama,
             nama: nama,
             photoURL: img,
@@ -229,6 +231,7 @@ const accMentor = async (req, res) => {
             email: email,
             displayName: nama,
             nama: nama,
+            mentor_id: uid,
             photoURL: img,
             role: "mentor",
 

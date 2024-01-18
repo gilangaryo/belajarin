@@ -215,6 +215,7 @@ const accMentor = async (req, res) => {
             uid: uid,
             email: email,
             displayName: nama,
+            nama: nama,
             photoURL: img,
             role: "mentor"
 
@@ -227,6 +228,7 @@ const accMentor = async (req, res) => {
             uid: uid,
             email: email,
             displayName: nama,
+            nama: nama,
             photoURL: img,
             role: "mentor",
 

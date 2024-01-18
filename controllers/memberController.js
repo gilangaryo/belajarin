@@ -14,7 +14,6 @@ const getAllMember = async (req, res) => {
     }
 };
 
-
 const getAllClassMember = async (req, res) => {
     try {
         const documentId = req.params.uid;
@@ -29,16 +28,23 @@ const getAllClassMember = async (req, res) => {
             list_class.push({
                 id: doc.id,
                 materi_id: doc.data().materi_id,
-                ...doc.data(),
+                status: doc.data().status,
                 material
             });
         }
 
-        res.send(list_class);
+        const statusToFilter = req.params.status;
+
+        const filteredList = list_class.filter(item => item.status === statusToFilter);
+
+        res.send(filteredList);
     } catch (error) {
         res.status(400).send(error.message);
     }
 };
+
+
+
 
 const getMateriMentor = async (materi_id) => {
     try {

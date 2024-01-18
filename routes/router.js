@@ -35,7 +35,7 @@ router.use((req, res, next) => {
 
 
 router.get('/member', getAllMember);
-router.get('/member/class/:uid', getAllClassMember);
+router.get('/member/class/:uid/:status', getAllClassMember);
 
 
 router.get('/member/:id', getMember);
@@ -148,37 +148,42 @@ const updateMentorMember22 = async (req, res) => {
         console.error("Error updating mentor and member:", error);
     }
 };
+
 const createAppointments = async (req) => {
-    const selectedDate = "2024-01-18T17:00:00.000Z";
+    try {
+        const selectedDate = "2024-01-18T17:00:00.000Z";
 
-    // Assuming you have the selected time object
-    const selectedTime = {
-        startTime: '05:00',
-        endTime: '06:00',
-        value: '05:00',
-        label: '05:00 - 06:00'
-    };
+        // Assuming you have the selected time object
+        const selectedTime = {
+            startTime: '05:00',
+            endTime: '06:00',
+            value: '05:00',
+            label: '05:00 - 06:00'
+        };
 
-    // Combine date and time for start and end
-    const startDateTimeString = `${selectedDate.slice(0, 10)} ${selectedTime.startTime}`;
-    const endDateTimeString = `${selectedDate.slice(0, 10)} ${selectedTime.endTime}`;
+        const startDate = new Date(`${selectedDate.slice(0, 10)}T${selectedTime.startTime}:00.000Z`);
+        const endDate = new Date(`${selectedDate.slice(0, 10)}T${selectedTime.endTime}:00.000Z`);
 
+        const mentorUID = 'your-mentor-uid';
 
-    // Create Date objects
-    const startDate = new Date(selectedDate);
-    const startTime = new Date(startDateTimeString);
-    const endTime = new Date(endDateTimeString);
+        const mentorDocRef = db.collection("mentor").doc(mentorUID);
 
-    if (!isNaN(startDate) && !isNaN(startTime) && !isNaN(endTime)) {
-        const appointments = [];
-        console.log(startDateTimeString);
-        console.log(endDateTimeString);
+        const subCollectionRef3 = mentorDocRef.collection("jadwal").doc();
+        await subCollectionRef3.set({
+            start: startDate,
+            end: endDate,
+        });
 
-        // Add logic for creating appointments as needed
-    } else {
-        console.error("Invalid date or time format");
+        console.log('Data set successfully');
+    } catch (error) {
+        console.error('Error creating appointments:', error);
     }
-}
+};
+
+// Example usage
+
+
+
 router.post('/jadwalbroku', createAppointments);
 
 module.exports = router;

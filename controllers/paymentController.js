@@ -8,7 +8,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const serverKey = process.env.MIDTRANS_SERVER_KEY;
 
-const addTransaction = async (transaction_id, price, materi_id, uid) => {
+const addTransaction = async (transaction_id, price, materi_id, uid, req) => {
     try {
         const transaction_uid = transaction_id;
         const harga = price;
@@ -20,6 +20,7 @@ const addTransaction = async (transaction_id, price, materi_id, uid) => {
 
         });
         console.log("order tambah!");
+        console.log(req.body);
     } catch (error) {
         console.error("Error writing document: ", error);
     }
@@ -40,7 +41,7 @@ const pay = async (req, res) => {
         const transaction_id = random_uid;
         console.log(price);
 
-        await addTransaction(transaction_id, price, materi_id, uid);
+        await addTransaction(transaction_id, price, materi_id, uid, req);
 
         if (!transaction_id || !title || !price) {
             throw new Error("Invalid request. Missing required parameters.");

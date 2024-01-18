@@ -21,6 +21,7 @@ const { sendEmail, sendEmails } = require('../controllers/sendEmailController');
 const { addMateri, getMateriMentor, getAllMateriMentor, getAllMaterial } = require('../controllers/materiController');
 const { uploadss } = require('../controllers/uploadController');
 const db = require('../config');
+const { timeStamp, time } = require('console');
 
 
 router.use(cors());
@@ -118,40 +119,32 @@ router.post('/gilangaryo', async (req, res) => {
 });
 
 
-
-const updateMentorMember22 = async (req) => {
+const updateMentorMember22 = async (req, res) => {
     try {
         const db = require("../config");
-        // tinggal ini diganti
-        const transaction_id = req.body.transaction_id;
-        const userSnapshot = await db.collection("order").where("order_id", "==", transaction_id).get();
+        const id_mentor = req.body.uid;
+        const materi_id = "WOI";
 
-        if (!userSnapshot.empty) {
-            // const uid = userSnapshot.docs[0].data().uid;
-            const materi_id = userSnapshot.docs[0].data().materi_id;
-            const id_member = userSnapshot.docs[0].data().id_member;
+        const mentor = db.collection('mentor').doc(id_mentor);
+        const mentorSub = mentor.collection('cobaKopi').doc(materi_id);
 
-            const member = db.collection('member').doc(id_member);
-            const memberSub = member.collection('listClassMember').doc(materi_id);
+        // Create a JavaScript Date object representing the current date and time
+        const currentDate = new Date();
 
-            await memberSub.set({
-                cek: "masuk ga ?",
-                materi_id: materi_id
-            });
+        // Convert the JavaScript Date object to a Firestore Timestamp
+        // const timestamp = Timestamp.fromDate(currentDate);
 
-            const id_mentor = "id_mentor";
-            const mentor = db.collection('mentor').doc(id_mentor);
-            const mentorSub = mentor.collection('listClassMentor').doc(materi_id);
-
-            await mentorSub.set({
-                cek: "masuk ya?",
-                materi_id: materi_id
-            });
-
-            console.log("Order updated successfully!");
-        } else {
-            console.log("No matching documents found for the given transaction_id.");
+        console.log(currentDate);
+        if (!currentDate) {
+            console.log(currentDate);
         }
+        // Use serverTimestamp() as a field value
+        await mentorSub.set({
+            cek: "masuk ga ?",
+            materi_id: materi_id,
+            createdAt: currentDate
+        });
+
     } catch (error) {
         console.error("Error updating mentor and member:", error);
     }

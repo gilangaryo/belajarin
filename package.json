@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "node index.js"
+    "start": "npm install express && npm run build",
+    "build": "nodemon index.js"
   },
   "dependencies": {
     "@firebase/app": "^0.9.25",

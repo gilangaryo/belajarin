@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require("../config");
 const { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL } = require('@firebase/storage');
-const { collection, getDocs } = require("@firebase/firestore");
+const { collection, getDocs, serverTimestamp } = require("@firebase/firestore");
 const uploadssss = async (imgFile, portfolioFile, regis_id, res) => {
     try {
         const { appku } = require("../config");
@@ -73,7 +73,8 @@ const createMateriDocument = async (db, uid, mentorName, title, selectedCategory
             price: price,
             category: selectedCategory,
             subCategory: selectedSubCategory,
-            subMenu: selectedSubMenu
+            subMenu: selectedSubMenu,
+            createdAt: serverTimestamp()
         });
 
         const mentorCollection = db.collection('mentor').doc(uid);
@@ -88,7 +89,8 @@ const createMateriDocument = async (db, uid, mentorName, title, selectedCategory
             price: price,
             category: selectedCategory,
             subCategory: selectedSubCategory,
-            subMenu: selectedSubMenu
+            subMenu: selectedSubMenu,
+            createdAt: serverTimestamp()
         });
 
         if (files && files.file[0] && files.file.length > 0) {
@@ -102,11 +104,13 @@ const createMateriDocument = async (db, uid, mentorName, title, selectedCategory
             const imgDownloadURL = await getDownloadURL(imgStorageRef);
 
             await subCollectionRef3.update({
-                image: imgDownloadURL
+                image: imgDownloadURL,
+                createdAt: serverTimestamp()
             });
 
             await materiMentorDocRef.update({
-                image: imgDownloadURL
+                image: imgDownloadURL,
+                createdAt: serverTimestamp()
             });
 
             console.log('Files successfully uploaded. img Download URL:', imgDownloadURL);

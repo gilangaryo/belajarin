@@ -14,6 +14,7 @@ const getAllMember = async (req, res) => {
     }
 };
 
+
 const getAllClassMember = async (req, res) => {
     try {
         const documentId = req.params.uid;
@@ -25,7 +26,7 @@ const getAllClassMember = async (req, res) => {
             const materi_id = doc.data().materi_id;
 
             // Fetch mentor data
-            const mentorData = await getMentorData(materi_id);
+            const mentorData = await getMentorData(doc.data().mentor_id);
 
             // Fetch materi_mentor data
             const material = await getMateriMentor(materi_id);
@@ -47,16 +48,19 @@ const getAllClassMember = async (req, res) => {
 
 const getMateriMentor = async (materi_id) => {
     try {
-        const mentorSnapshot = await db.collection("mentor").get();
         const material = [];
+
+        const mentorSnapshot = await db.collection("mentor").get();
 
         for (const mentorDoc of mentorSnapshot.docs) {
             const materiSnapshot = await mentorDoc.ref.collection("materi_mentor").where("materi_id", "==", materi_id).get();
 
-            materiSnapshot.forEach(function (doc2) {
+            materiSnapshot.forEach((doc2) => {
                 const currentMaterial = {
+                    mentorName: mentorDoc.data().nama,
                     photoURL: mentorDoc.data().photoURL,
-                    title: doc2.data().title
+                    title: doc2.data().title,
+                    image: doc2.data().image
                 };
 
                 material.push(currentMaterial);
@@ -70,33 +74,22 @@ const getMateriMentor = async (materi_id) => {
     }
 };
 
-const getMentorData = async (listClassId) => {
+const getMentorData = async (id_mentor) => {
     try {
-        const mentorSnapshot = await db.collection("mentor").get();
-        const mentorData = [];
+        const mentorSnapshot = await db.collection("mentor").doc(id_mentor).get();
 
-        for (const mentorDoc of mentorSnapshot.docs) {
-            const materiSnapshot = await mentorDoc.ref.collection("materi_mentor").where("materi_id", "==", listClassId).get();
-
-            materiSnapshot.forEach(function (doc2) {
-                const currentMentorData = {
-                    mentor_id: mentorDoc.id,
-                    nama: mentorDoc.data().nama,
-
-                };
-
-                mentorData.push(currentMentorData);
-            });
+        if (mentorSnapshot.exists) {
+            const mentorData = mentorSnapshot.data();
+            return mentorData;
+        } else {
+            console.log("Mentor not found");
+            return null;
         }
-
-        return mentorData;
     } catch (error) {
         console.error('Error getting documents:', error);
-        return [];
+        return null;
     }
 };
-
-
 
 
 

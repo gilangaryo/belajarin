@@ -2,8 +2,8 @@ const express = require('express');
 const midtransClient = require('midtrans-client');
 const db = require("../config");
 
-const orderCollection = db.collection("order"); // Change variable name for clarity
-
+const orderCollection = db.collection("order");
+const { createAppointments } = require('../controllers/appointment');
 const router = express.Router();
 const crypto = require('crypto');
 const serverKey = process.env.MIDTRANS_SERVER_KEY;
@@ -20,12 +20,10 @@ const addTransaction = async (transaction_id, price, materi_id, uid, req) => {
 
         });
         console.log("order tambah!");
-        console.log(req.body);
     } catch (error) {
         console.error("Error writing document: ", error);
     }
 };
-
 const pay = async (req, res) => {
     try {
         const random_uid = crypto.randomUUID();
@@ -39,7 +37,6 @@ const pay = async (req, res) => {
         const email_user = registerDoc.data().email;
         const nama = registerDoc.data().nama;
         const transaction_id = random_uid;
-        console.log(price);
 
         await addTransaction(transaction_id, price, materi_id, uid, req);
 
@@ -79,9 +76,14 @@ const pay = async (req, res) => {
                 }
                 const token = transaction.token;
 
-                res.status(200).json({ message: "berhasil", dataPayment, token })
-            });
+                // Call createAppointments inside the then block
+                createAppointments(req, transaction_id);
 
+                res.status(200).json({ message: "berhasil", dataPayment, token })
+            })
+            .catch((error) => {
+                res.status(400).send(error.message);
+            });
     } catch (error) {
         res.status(400).send(error.message);
     }

@@ -35,7 +35,7 @@ router.use((req, res, next) => {
 
 
 router.get('/member', getAllMember);
-router.get('/member/class/:uid/:status', getAllClassMember);
+router.get('/member/class/:uid', getAllClassMember);
 
 
 router.get('/member/:id', getMember);

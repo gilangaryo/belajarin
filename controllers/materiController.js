@@ -31,11 +31,11 @@ const uploadssss = async (imgFile, portfolioFile, regis_id, res) => {
 const addMateri = async (req, res) => {
     try {
         const db = require('../config');
-        // const { uid } = req.params;
+        const { uid } = req.params;
         // , mentor_id, mentor_name
         // const mentor_id = "xcpPYjTRcHBFM0gOMyZj";
         // const mentor_name = "jeki";
-        const { title, selectedCategory, selectedSubCategory, selectedSubMenu, price, learningPath, uid } = req.body;
+        const { title, selectedCategory, selectedSubCategory, selectedSubMenu, price, learningPath } = req.body;
 
         console.log(uid);
         const registerDoc = await db.collection("mentor").doc(uid).get();

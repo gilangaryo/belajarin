@@ -113,11 +113,9 @@ const createMateriDocument = async (db, uid, mentorName, title, selectedCategory
         } else {
             console.error('Image file is missing or empty.');
         }
-        res.status(201).send('Berhasil tambah!');
         return subCollectionRef3;
     } catch (error) {
         console.error('Error creating materi document:', error);
-        res.status(500).send('Internal Server Error');
         return null;
     }
 };

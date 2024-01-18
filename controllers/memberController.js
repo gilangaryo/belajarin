@@ -55,7 +55,6 @@ const getMateriMentor = async (materi_id) => {
 
             materiSnapshot.forEach(function (doc2) {
                 const currentMaterial = {
-                    mentor_id: mentorDoc.id,
                     photoURL: mentorDoc.data().photoURL,
                     title: doc2.data().title
                 };
@@ -82,7 +81,6 @@ const getMentorData = async (listClassId) => {
             materiSnapshot.forEach(function (doc2) {
                 const currentMentorData = {
                     mentor_id: mentorDoc.id,
-                    location: mentorDoc.data().location,
                     nama: mentorDoc.data().nama,
 
                 };

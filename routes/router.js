@@ -163,6 +163,7 @@ const createAppointments = async (req) => {
     const startDateTimeString = `${selectedDate.slice(0, 10)} ${selectedTime.startTime}`;
     const endDateTimeString = `${selectedDate.slice(0, 10)} ${selectedTime.endTime}`;
 
+
     // Create Date objects
     const startDate = new Date(selectedDate);
     const startTime = new Date(startDateTimeString);
@@ -170,9 +171,8 @@ const createAppointments = async (req) => {
 
     if (!isNaN(startDate) && !isNaN(startTime) && !isNaN(endTime)) {
         const appointments = [];
-        console.log(startDate);
-        console.log(startTime);
-        console.log(endTime);
+        console.log(startDateTimeString);
+        console.log(endDateTimeString);
 
         // Add logic for creating appointments as needed
     } else {

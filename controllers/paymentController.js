@@ -140,7 +140,7 @@ const updateMentorMember = async (transaction_id) => {
             await memberSub.set({
                 price: harga,
                 materi_id: materi_id,
-                status: "PAID"
+                status: "waiting"
             });
 
             const id_mentor = "id_mentor";

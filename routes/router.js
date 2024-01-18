@@ -93,7 +93,7 @@ router.post('/sendemails', sendEmails);
 
 
 // TAMBAH MATERI
-router.post('/HomeMentor/:mentor_name/:materi_id/addMateri', uploads.fields([{ name: 'file', maxCount: 1 }]), addMateri);
+router.post('/HomeMentor/:mentor_name/:uid/addMateri', uploads.fields([{ name: 'file', maxCount: 1 }]), addMateri);
 
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 1000000 } });

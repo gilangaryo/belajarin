@@ -24,18 +24,12 @@ const getAllClassMember = async (req, res) => {
 
         for (const doc of snapshot_class.docs) {
             const materi_id = doc.data().materi_id;
-
-            // Fetch mentor data
-            const mentorData = await getMentorData(doc.data().mentor_id);
-
-            // Fetch materi_mentor data
             const material = await getMateriMentor(materi_id);
 
             list_class.push({
                 id: doc.id,
                 materi_id: doc.data().materi_id,
                 ...doc.data(),
-                mentorData,
                 material
             });
         }
@@ -71,23 +65,6 @@ const getMateriMentor = async (materi_id) => {
     } catch (error) {
         console.error('Error getting documents:', error);
         return [];
-    }
-};
-
-const getMentorData = async (id_mentor) => {
-    try {
-        const mentorSnapshot = await db.collection("mentor").doc(id_mentor).get();
-
-        if (mentorSnapshot.exists) {
-            const mentorData = mentorSnapshot.data();
-            return mentorData;
-        } else {
-            console.log("Mentor not found");
-            return null;
-        }
-    } catch (error) {
-        console.error('Error getting documents:', error);
-        return null;
     }
 };
 
